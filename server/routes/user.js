@@ -3,6 +3,14 @@ const router = express.Router();
 
 const pool = require("../config/database");
 
+// Browser helper
+router.get("/login", (req, res) => {
+  res.json({
+    success: false,
+    message: "Use POST /user/login",
+  });
+});
+
 // Login / Create User
 router.post("/login", async (req, res) => {
   try {
@@ -15,9 +23,18 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    const id = Number(telegramId);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Telegram ID",
+      });
+    }
+
     const existing = await pool.query(
       "SELECT * FROM users WHERE telegram_id = $1",
-      [telegramId]
+      [id]
     );
 
     if (existing.rows.length > 0) {
@@ -34,7 +51,7 @@ router.post("/login", async (req, res) => {
       VALUES ($1, $2)
       RETURNING *
       `,
-      [telegramId, username || ""]
+      [id, username || ""]
     );
 
     res.json({
@@ -55,11 +72,18 @@ router.post("/login", async (req, res) => {
 // Load User
 router.get("/:telegramId", async (req, res) => {
   try {
-    const { telegramId } = req.params;
+    const id = Number(req.params.telegramId);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Telegram ID",
+      });
+    }
 
     const result = await pool.query(
       "SELECT * FROM users WHERE telegram_id = $1",
-      [telegramId]
+      [id]
     );
 
     if (result.rows.length === 0) {
