@@ -8,6 +8,7 @@ const pool = require("./config/database");
 
 const userRoutes = require("./routes/user");
 const miningRoutes = require("./routes/mining");
+const upgradeRoutes = require("./routes/upgrades");
 
 const app = express();
 
@@ -42,8 +43,9 @@ initDatabase();
 // Routes
 app.use("/user", userRoutes);
 app.use("/mine", miningRoutes);
+app.use("/upgrade", upgradeRoutes);
 
-// Test Route
+// Health Check
 app.get("/", (req, res) => {
   res.send("🚀 GlaxMiner API Running");
 });
