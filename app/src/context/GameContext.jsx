@@ -1,68 +1,59 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { loadData, saveData } from "../utils/storage";
-import { PICKAXE_LEVELS, MAX_PICKAXE_LEVEL } from "../data/config";
+import { useAuth } from "./AuthContext";
+import { loadUser } from "../api/userApi";
 
 const GameContext = createContext();
 
 export function GameProvider({ children }) {
-  const [game, setGame] = useState(loadData());
+  const { user, loading } = useAuth();
+
+  const [game, setGame] = useState({
+    balance: 0,
+    pickaxeLevel: 1,
+    mining: false,
+    miningStart: 0,
+    canClaim: false,
+  });
+
+  const [gameLoading, setGameLoading] = useState(true);
 
   useEffect(() => {
-    saveData(game);
-  }, [game]);
+    if (loading) return;
+    if (!user) {
+      setGameLoading(false);
+      return;
+    }
 
-  function addBalance(amount) {
-    setGame(prev => ({
-      ...prev,
-      balance: prev.balance + amount,
-    }));
-  }
+    async function fetchGame() {
+      try {
+        const data = await loadUser(user.telegram_id);
 
-  function spendBalance(amount) {
-    if (game.balance < amount) return false;
+        if (data.success) {
+          setGame({
+            balance: data.user.balance,
+            pickaxeLevel: data.user.pickaxe_level,
+            mining: data.user.mining,
+            miningStart: data.user.mining_start,
+            canClaim: data.user.can_claim,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
 
-    setGame(prev => ({
-      ...prev,
-      balance: prev.balance - amount,
-    }));
+      setGameLoading(false);
+    }
 
-    return true;
-  }
-
-  function upgradePickaxe() {
-  if (game.pickaxeLevel >= MAX_PICKAXE_LEVEL) {
-    alert("Maximum Level Reached");
-    return;
-  }
-
-  const cost = PICKAXE_LEVELS[game.pickaxeLevel + 1].upgradeCost;
-
-  if (game.balance < cost) {
-    alert("Not enough GLX");
-    return;
-  }
-
-  setGame(prev => {
-    const updated = {
-      ...prev,
-      balance: prev.balance - cost,
-      pickaxeLevel: prev.pickaxeLevel + 1,
-    };
-
-    saveData(updated);
-
-    return updated;
-  });
-}
+    fetchGame();
+  }, [user, loading]);
 
   return (
     <GameContext.Provider
       value={{
         game,
         setGame,
-        addBalance,
-        spendBalance,
-        upgradePickaxe,
+        gameLoading,
+        user,
       }}
     >
       {children}

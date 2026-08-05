@@ -1,7 +1,7 @@
 import { useMiningContext } from "../context/MiningContext";
 
 function Header() {
-  const { balance } = useMiningContext();
+  const { balance = 0 } = useMiningContext() || {};
 
   return (
     <div className="header">
@@ -14,7 +14,7 @@ function Header() {
 
         <div>
           <h3>GLX5062715348</h3>
-          <p>{balance.toFixed(2)} GLX</p>
+          <p>{Number(balance).toFixed(2)} GLX</p>
         </div>
       </div>
 
