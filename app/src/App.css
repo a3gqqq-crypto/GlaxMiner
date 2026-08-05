@@ -434,3 +434,132 @@ color:#92a0c0;
 .dev-button:hover{
   transform:translateY(-2px);
 }
+/* REFERRAL SYSTEM */
+
+.referral-card{
+  padding:25px;
+  border-radius:25px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+}
+
+
+.referral-card h2{
+  margin-top:0;
+}
+
+
+.subtitle{
+  color:#9aa4c5;
+  font-size:14px;
+}
+
+
+.reward-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:15px;
+  margin-top:25px;
+}
+
+
+.reward-box{
+
+  padding:20px;
+  text-align:center;
+
+  border-radius:20px;
+
+  background:rgba(120,90,255,.12);
+
+  border:1px solid rgba(255,255,255,.08);
+
+}
+
+
+.reward-box h3{
+
+  margin:10px 0;
+
+  font-size:16px;
+
+}
+
+
+.reward-box span{
+
+  color:#70ffd5;
+
+  font-weight:bold;
+
+}
+
+
+.coming-box{
+
+  margin-top:25px;
+
+  padding:20px;
+
+  text-align:center;
+
+  border-radius:20px;
+
+  background:rgba(255,255,255,.04);
+
+  color:white;
+
+  font-size:18px;
+
+}
+
+
+.coming-box span{
+
+  color:#8f98b8;
+
+  font-size:14px;
+
+}
+
+
+
+.badges{
+
+  margin-top:30px;
+
+}
+
+
+.badge-grid{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:15px;
+
+}
+
+
+.badge-grid div{
+
+  text-align:center;
+
+  padding:18px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,.05);
+
+}
+
+
+.badge-grid p{
+
+  margin:8px 0 0;
+
+  color:#9aa4c5;
+
+}

@@ -3,59 +3,100 @@ import BottomNav from "../components/BottomNav";
 function Community({ page, setPage }) {
   return (
     <div className="app-container">
+
       <main className="main-content">
 
-        <h1 className="page-title">👥 Invite Friends</h1>
+        <h1 className="page-title">
+          👥 Invite Friends
+        </h1>
 
-        <div className="upgrade-card">
+
+        <div className="referral-card">
 
           <h2>🎁 Earn Rewards</h2>
 
-          <p>Invite friends and earn GLX together.</p>
+          <p className="subtitle">
+            Invite friends and grow the GlaxMiner community
+          </p>
 
-          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
 
-          <h3>👤 Invite 1 Friend</h3>
-          <p><strong>+500 GLX</strong></p>
+          <div className="reward-grid">
 
-          <br />
+            <div className="reward-box">
+              👤
+              <h3>Invite 1 Friend</h3>
+              <span>+500 GLX</span>
+            </div>
 
-          <h3>👥 Invite 5 Friends</h3>
-          <p><strong>+2,500 GLX</strong></p>
 
-          <br />
+            <div className="reward-box">
+              👥
+              <h3>Invite 5 Friends</h3>
+              <span>+2,500 GLX</span>
+            </div>
 
-          <h3>🚀 Invite 25 Friends</h3>
-          <p><strong>Exclusive VIP Reward</strong></p>
 
-          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
+            <div className="reward-box">
+              🚀
+              <h3>Invite 25 Friends</h3>
+              <span>VIP Reward</span>
+            </div>
 
-          <h3>🏆 Referral Leaderboard</h3>
+          </div>
 
-          <button disabled>
-            🚧 Coming Soon
-          </button>
 
-          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
+          <div className="coming-box">
 
-          <h3>🎖 Referral Badges</h3>
+            🏆 Referral Leaderboard
 
-          <p>🛰 Explorer</p>
-          <p>⭐ Captain</p>
-          <p>👑 Commander</p>
-          <p>🌌 Galaxy Master</p>
+            <br/>
 
-          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
+            <span>
+              Coming Soon
+            </span>
 
-          <button disabled>
-            🚀 Launching Soon
-          </button>
+          </div>
+
+
+          <div className="badges">
+
+            <h2>🎖 Referral Badges</h2>
+
+            <div className="badge-grid">
+
+              <div>
+                🌎
+                <p>Explorer</p>
+              </div>
+
+              <div>
+                ⭐
+                <p>Captain</p>
+              </div>
+
+              <div>
+                👑
+                <p>Commander</p>
+              </div>
+
+              <div>
+                🌌
+                <p>Galaxy Master</p>
+              </div>
+
+            </div>
+
+          </div>
+
 
         </div>
 
+
       </main>
 
-      <BottomNav page={page} setPage={setPage} />
+
+      <BottomNav page={page} setPage={setPage}/>
+
     </div>
   );
 }
