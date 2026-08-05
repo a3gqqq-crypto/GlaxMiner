@@ -11,42 +11,32 @@ function Community({ page, setPage }) {
 
           <h2>🎁 Earn Rewards</h2>
 
-          <p>
-            Grow the GlaxMiner community and earn rewards for every friend you invite.
-          </p>
+          <p>Invite friends and earn GLX together.</p>
+
+          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
+
+          <h3>👤 Invite 1 Friend</h3>
+          <p><strong>+500 GLX</strong></p>
 
           <br />
 
-          <hr />
+          <h3>👥 Invite 5 Friends</h3>
+          <p><strong>+2,500 GLX</strong></p>
 
-          <h3>🎁 Referral Rewards</h3>
+          <br />
 
-          <p>👤 Invite 1 Friend</p>
-          <strong>+500 GLX</strong>
+          <h3>🚀 Invite 25 Friends</h3>
+          <p><strong>Exclusive VIP Reward</strong></p>
 
-          <br /><br />
-
-          <p>👥 Invite 5 Friends</p>
-          <strong>+2,500 GLX</strong>
-
-          <br /><br />
-
-          <p>🚀 Invite 25 Friends</p>
-          <strong>Exclusive VIP Reward</strong>
-
-          <hr />
+          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
 
           <h3>🏆 Referral Leaderboard</h3>
 
-          <p>
-            Compete with other miners and climb the global referral rankings.
-          </p>
-
-          <button disabled style={{ marginTop: "10px" }}>
+          <button disabled>
             🚧 Coming Soon
           </button>
 
-          <hr />
+          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
 
           <h3>🎖 Referral Badges</h3>
 
@@ -55,24 +45,11 @@ function Community({ page, setPage }) {
           <p>👑 Commander</p>
           <p>🌌 Galaxy Master</p>
 
-          <hr />
+          <hr style={{ margin: "20px 0", opacity: 0.2 }} />
 
-          <div style={{ textAlign: "center" }}>
-            <h3>🚀 Launching Soon</h3>
-
-            <p>
-              The Referral System is currently under active development.
-            </p>
-
-            <p>
-              Invite your friends, earn passive GLX, unlock badges,
-              and compete on the global leaderboard.
-            </p>
-
-            <button disabled>
-              Beta Feature
-            </button>
-          </div>
+          <button disabled>
+            🚀 Launching Soon
+          </button>
 
         </div>
 
