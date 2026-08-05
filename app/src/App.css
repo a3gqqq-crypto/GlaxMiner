@@ -563,3 +563,46 @@ color:#92a0c0;
   color:#9aa4c5;
 
 }
+/* COMMUNITY FIX */
+
+.community-page{
+  width:100%;
+  overflow:hidden;
+}
+
+
+.community-page *{
+  max-width:100%;
+}
+
+
+.referral-card{
+  width:100%;
+  display:block;
+}
+
+
+.reward-grid{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+}
+
+
+.reward-box{
+  width:100%;
+  display:block;
+}
+
+
+.badge-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  width:100%;
+}
+
+
+.coming-box{
+  width:100%;
+  display:block;
+}
