@@ -3,11 +3,12 @@ function BottomNav({ page, setPage }) {
     <div className="bottom-nav">
 
       <button
-        className={page === "community" ? "active" : ""}
-        onClick={() => setPage("community")}
+        className={page === "leaderboard" ? "active" : ""}
+        onClick={() => setPage("leaderboard")}
       >
         🏆
       </button>
+
 
       <button
         className={page === "wallet" ? "active" : ""}
@@ -16,12 +17,18 @@ function BottomNav({ page, setPage }) {
         👛
       </button>
 
+
       <button
-        className={page === "mine" ? "active mine-center" : "mine-center"}
+        className={
+          page === "mine"
+            ? "active mine-center"
+            : "mine-center"
+        }
         onClick={() => setPage("mine")}
       >
         ⛏️
       </button>
+
 
       <button
         className={page === "upgrades" ? "active" : ""}
@@ -29,6 +36,7 @@ function BottomNav({ page, setPage }) {
       >
         🚀
       </button>
+
 
       <button
         className={page === "profile" ? "active" : ""}
