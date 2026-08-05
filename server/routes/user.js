@@ -3,15 +3,9 @@ const router = express.Router();
 
 const pool = require("../config/database");
 
-// Browser helper
-router.get("/login", (req, res) => {
-  res.json({
-    success: false,
-    message: "Use POST /user/login",
-  });
-});
-
+// ===========================
 // Login / Create User
+// ===========================
 router.post("/login", async (req, res) => {
   try {
     const { telegramId, username } = req.body;
@@ -23,18 +17,9 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const id = Number(telegramId);
-
-    if (!Number.isInteger(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Telegram ID",
-      });
-    }
-
     const existing = await pool.query(
       "SELECT * FROM users WHERE telegram_id = $1",
-      [id]
+      [telegramId]
     );
 
     if (existing.rows.length > 0) {
@@ -51,7 +36,7 @@ router.post("/login", async (req, res) => {
       VALUES ($1, $2)
       RETURNING *
       `,
-      [id, username || ""]
+      [telegramId, username || ""]
     );
 
     res.json({
@@ -69,21 +54,56 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Load User
+// ===========================
+// Add Balance (DEV)
+// ===========================
+router.post("/addBalance", async (req, res) => {
+  try {
+    const { telegramId, amount } = req.body;
+
+    await pool.query(
+      `
+      UPDATE users
+      SET balance = balance + $1
+      WHERE telegram_id = $2
+      `,
+      [amount, telegramId]
+    );
+
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM users
+      WHERE telegram_id = $1
+      `,
+      [telegramId]
+    );
+
+    res.json({
+      success: true,
+      user: result.rows[0],
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Database error",
+    });
+  }
+});
+
+// ===========================
+// Get User
+// ===========================
 router.get("/:telegramId", async (req, res) => {
   try {
-    const id = Number(req.params.telegramId);
-
-    if (!Number.isInteger(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Telegram ID",
-      });
-    }
+    const { telegramId } = req.params;
 
     const result = await pool.query(
       "SELECT * FROM users WHERE telegram_id = $1",
-      [id]
+      [telegramId]
     );
 
     if (result.rows.length === 0) {
