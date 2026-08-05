@@ -11,6 +11,16 @@ function Home({ page, setPage }) {
     <div className="app-container">
       <main className="main-content">
 
+        <div className="upgrade-card">
+          <h2>🚧 GLAXMINER BETA v0.2</h2>
+
+          <p>
+            Welcome to the early beta! New features like
+            Referrals, VIP, Wallet, Daily Rewards and
+            Leaderboards are coming soon.
+          </p>
+        </div>
+
         <Header />
 
         <StatsCards />
@@ -26,9 +36,9 @@ function Home({ page, setPage }) {
       </main>
 
       <BottomNav
-  page={page}
-  setPage={setPage}
-/>
+        page={page}
+        setPage={setPage}
+      />
     </div>
   );
 }

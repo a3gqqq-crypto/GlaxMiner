@@ -4,8 +4,32 @@ function Wallet({ page, setPage }) {
   return (
     <div className="app-container">
       <main className="main-content">
-        <h1>👛 Wallet</h1>
-        <p>Coming Soon...</p>
+
+        <h1 className="page-title">💰 Wallet</h1>
+
+        <div className="upgrade-card">
+
+          <h2>GLAX Wallet</h2>
+
+          <p>
+            Manage your GLX safely.
+          </p>
+
+          <br />
+
+          <p>💸 Withdraw GLX</p>
+          <p>📈 Transaction History</p>
+          <p>🎁 Reward History</p>
+          <p>💳 Future Deposits</p>
+
+          <br />
+
+          <button disabled>
+            🚧 Coming Soon
+          </button>
+
+        </div>
+
       </main>
 
       <BottomNav page={page} setPage={setPage} />
