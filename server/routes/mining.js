@@ -7,15 +7,21 @@ const {
   MINING_POWER,
 } = require("../config/mining");
 
+// =======================
 // Start Mining
+// =======================
 router.post("/start", async (req, res) => {
   try {
+    console.log("START BODY:", req.body);
+
     const { telegramId } = req.body;
 
     const user = await pool.query(
-      "SELECT * FROM users WHERE telegram_id=$1",
+      "SELECT * FROM users WHERE telegram_id = $1",
       [telegramId]
     );
+
+    console.log("FOUND USER:", user.rows);
 
     if (user.rows.length === 0) {
       return res.json({
@@ -38,10 +44,11 @@ router.post("/start", async (req, res) => {
     await pool.query(
       `
       UPDATE users
-      SET mining=true,
-          mining_start=$1,
-          can_claim=false
-      WHERE telegram_id=$2
+      SET
+        mining = true,
+        mining_start = $1,
+        can_claim = false
+      WHERE telegram_id = $2
       `,
       [now, telegramId]
     );
@@ -62,15 +69,21 @@ router.post("/start", async (req, res) => {
   }
 });
 
+// =======================
 // Claim Reward
+// =======================
 router.post("/claim", async (req, res) => {
   try {
+    console.log("CLAIM BODY:", req.body);
+
     const { telegramId } = req.body;
 
     const result = await pool.query(
-      "SELECT * FROM users WHERE telegram_id=$1",
+      "SELECT * FROM users WHERE telegram_id = $1",
       [telegramId]
     );
+
+    console.log("FOUND USER:", result.rows);
 
     if (result.rows.length === 0) {
       return res.json({
@@ -90,11 +103,11 @@ router.post("/claim", async (req, res) => {
       `
       UPDATE users
       SET
-      balance=$1,
-      mining=false,
-      mining_start=0,
-      can_claim=false
-      WHERE telegram_id=$2
+        balance = $1,
+        mining = false,
+        mining_start = 0,
+        can_claim = false
+      WHERE telegram_id = $2
       `,
       [newBalance, telegramId]
     );

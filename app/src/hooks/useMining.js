@@ -1,41 +1,35 @@
 import { useEffect, useState } from "react";
-import { loadData, saveData } from "../utils/storage";
-import { MINING_DURATION, PICKAXE_LEVELS } from "../data/config";
+import { useAuth } from "../context/AuthContext";
+import { useGame } from "../context/GameContext";
+import { startMining, claimMining } from "../api/miningApi";
+import { loadUser } from "../api/userApi";
+
+const MINING_DURATION = 5 * 60 * 60;
 
 export default function useMining() {
-  const [balance, setBalance] = useState(0);
-  const [mining, setMining] = useState(false);
-  const [startTime, setStartTime] = useState(null);
+  const { user } = useAuth();
+  const { game, setGame } = useGame();
+
   const [timeLeft, setTimeLeft] = useState(0);
-  const [canClaim, setCanClaim] = useState(false);
 
   useEffect(() => {
-    const data = loadData();
-
-    setBalance(data.balance);
-    setMining(data.mining);
-    setStartTime(data.startTime);
-    setCanClaim(data.canClaim || false);
-  }, []);
-
-  useEffect(() => {
-    if (!mining || !startTime) return;
+    if (!game.mining) return;
 
     const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const elapsed = Math.floor(
+        (Date.now() - game.miningStart) / 1000
+      );
+
       const remaining = MINING_DURATION - elapsed;
 
       if (remaining <= 0) {
-        setMining(false);
-        setCanClaim(true);
         setTimeLeft(0);
 
-        saveData({
-          balance,
+        setGame(prev => ({
+          ...prev,
           mining: false,
-          startTime,
           canClaim: true,
-        });
+        }));
 
         clearInterval(interval);
       } else {
@@ -44,66 +38,56 @@ export default function useMining() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [mining, startTime, balance]);
+  }, [game.mining, game.miningStart, setGame]);
 
-  async function startMining() {
-    try {
-      const response = await fetch("http://localhost:5000/mine/start", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: 1, // temporary user id
-        }),
-      });
+  async function start() {
+    if (!user) return;
 
-      const data = await response.json();
+    const data = await startMining(user.telegram_id);
 
-      if (!data.success) {
-        alert(data.message);
-        return;
-      }
+    if (!data.success) {
+      alert(data.message);
+      return;
+    }
 
-      const now = Date.now();
+    setGame(prev => ({
+      ...prev,
+      mining: true,
+      miningStart: data.startTime,
+      canClaim: false,
+    }));
+  }
 
-      setMining(true);
-      setCanClaim(false);
-      setStartTime(now);
+  async function claim() {
+    if (!user) return;
 
-      saveData({
-        balance,
-        mining: true,
-        startTime: now,
-        canClaim: false,
-      });
+    const data = await claimMining(user.telegram_id);
 
-    } catch (err) {
-      console.error(err);
-      alert("Cannot connect to server.");
+    if (!data.success) {
+      alert(data.message);
+      return;
+    }
+
+    const refreshed = await loadUser(user.telegram_id);
+
+    if (refreshed.success) {
+      setGame(prev => ({
+        ...prev,
+        balance: refreshed.user.balance,
+        pickaxeLevel: refreshed.user.pickaxe_level,
+        mining: refreshed.user.mining,
+        miningStart: refreshed.user.mining_start,
+        canClaim: refreshed.user.can_claim,
+      }));
     }
   }
 
-  function claimReward() {
-    const newBalance = balance + PICKAXE_LEVELS[1].reward;
-
-    setBalance(newBalance);
-    setCanClaim(false);
-
-    saveData({
-      balance: newBalance,
-      mining: false,
-      startTime: null,
-      canClaim: false,
-    });
-  }
-
   return {
-    balance,
-    mining,
+    balance: game.balance ?? 0,
+    mining: game.mining,
     timeLeft,
-    canClaim,
-    startMining,
-    claimReward,
+    canClaim: game.canClaim,
+    startMining: start,
+    claimReward: claim,
   };
 }

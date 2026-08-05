@@ -3,15 +3,18 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-import { MiningProvider } from "./context/MiningContext";
+import { AuthProvider } from "./context/AuthContext";
 import { GameProvider } from "./context/GameContext";
+import { MiningProvider } from "./context/MiningContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GameProvider>
-      <MiningProvider>
-        <App />
-      </MiningProvider>
-    </GameProvider>
+    <AuthProvider>
+      <GameProvider>
+        <MiningProvider>
+          <App />
+        </MiningProvider>
+      </GameProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

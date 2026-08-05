@@ -1,63 +1,111 @@
 import BottomNav from "../components/BottomNav";
 import { useGame } from "../context/GameContext";
+import { useAuth } from "../context/AuthContext";
+
 import {
   PICKAXE_LEVELS,
   MAX_PICKAXE_LEVEL,
 } from "../data/config";
-import { saveData } from "../utils/storage";
+
+import {
+  addBalance,
+  loadUser,
+} from "../api/userApi";
+
+import {
+  upgradePickaxe as upgradeApi,
+} from "../api/upgradeApi";
 
 function Upgrades({ page, setPage }) {
-  const { game, setGame, upgradePickaxe } = useGame();
+  const { game, setGame } = useGame();
+  const { user } = useAuth();
 
-  const reward = PICKAXE_LEVELS[game.pickaxeLevel].reward;
+  const reward =
+    PICKAXE_LEVELS[game.pickaxeLevel]?.reward || 100;
 
   const nextCost =
     game.pickaxeLevel < MAX_PICKAXE_LEVEL
       ? PICKAXE_LEVELS[game.pickaxeLevel + 1].upgradeCost
       : 0;
 
-  function addMoney() {
-    const updated = {
-      ...game,
-      balance: game.balance + 10000,
-    };
+  async function giveMoney() {
+    try {
+      if (!user) {
+        alert("User not loaded.");
+        return;
+      }
 
-    saveData(updated);
-    setGame(updated);
+      const result = await addBalance(
+        user.telegram_id,
+        10000
+      );
+
+      if (!result.success) {
+        alert(result.message);
+        return;
+      }
+
+      const refreshed = await loadUser(user.telegram_id);
+
+      if (refreshed.success) {
+        setGame(prev => ({
+          ...prev,
+          balance: refreshed.user.balance,
+          pickaxeLevel: refreshed.user.pickaxe_level,
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add balance.");
+    }
   }
 
-  function resetProgress() {
-    const updated = {
-      ...game,
-      balance: 0,
-      pickaxeLevel: 1,
-    };
+  async function upgradePickaxe() {
+    try {
+      if (!user) {
+        alert("User not loaded.");
+        return;
+      }
 
-    saveData(updated);
-    setGame(updated);
+      const result = await upgradeApi(user.telegram_id);
+
+      if (!result.success) {
+        alert(result.message);
+        return;
+      }
+
+      const refreshed = await loadUser(user.telegram_id);
+
+      if (refreshed.success) {
+        setGame(prev => ({
+          ...prev,
+          balance: refreshed.user.balance,
+          pickaxeLevel: refreshed.user.pickaxe_level,
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Upgrade failed.");
+    }
   }
 
   return (
     <div className="app-container">
       <main className="main-content">
 
-        <h1 className="page-title">🚀 Upgrades</h1>
+        <h1 className="page-title">
+          🚀 Upgrades
+        </h1>
 
         <button
           className="dev-button"
-          onClick={addMoney}
+          onClick={giveMoney}
         >
           💰 Add 10,000 GLX
         </button>
 
-        <button
-          className="dev-button"
-          onClick={resetProgress}
-        >
-          🔄 Reset Progress
-        </button>
-
         <div className="upgrade-card">
+
           <div>
             <h2>⛏️ Pickaxe</h2>
 
@@ -74,7 +122,9 @@ function Upgrades({ page, setPage }) {
                 Upgrade Cost: {nextCost} GLX
               </span>
             ) : (
-              <span>Maximum Level Reached</span>
+              <span>
+                Maximum Level Reached
+              </span>
             )}
           </div>
 
@@ -86,6 +136,7 @@ function Upgrades({ page, setPage }) {
               ? "MAX"
               : "Upgrade"}
           </button>
+
         </div>
 
       </main>
