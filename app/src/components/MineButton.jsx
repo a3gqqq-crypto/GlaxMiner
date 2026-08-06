@@ -3,6 +3,7 @@ import { useMiningContext } from "../context/MiningContext";
 
 function MineButton() {
 
+
   const {
     mining,
     canClaim,
@@ -17,10 +18,12 @@ function MineButton() {
     return (
 
       <button
-        className="mine-button"
+        className="mine-button claim"
         onClick={claimReward}
       >
+
         🎁 Claim Reward
+
       </button>
 
     );
@@ -37,7 +40,9 @@ function MineButton() {
         className="mine-button"
         disabled
       >
+
         ⛏️ Mining...
+
       </button>
 
     );
@@ -52,7 +57,9 @@ function MineButton() {
       className="mine-button"
       onClick={startMining}
     >
-      ⛏️ Start Mining
+
+      🚀 Start Mining
+
     </button>
 
   );
