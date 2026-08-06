@@ -6,6 +6,8 @@ import ProgressBar from "../components/ProgressBar";
 import InviteCard from "../components/InviteCard";
 import BottomNav from "../components/BottomNav";
 
+import "../styles/Home.css";
+
 
 function Home({ page, setPage }) {
 
