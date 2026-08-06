@@ -1,0 +1,92 @@
+.page-title {
+  text-align: center;
+  font-size: 38px;
+  font-weight: 900;
+  margin-top: 30px;
+  margin-bottom: 35px;
+}
+
+
+/* Main leaderboard box */
+
+.leaderboard-card {
+
+  background:
+  rgba(40,30,90,.45);
+
+  border:
+  1px solid rgba(255,255,255,.12);
+
+  border-radius:25px;
+
+  padding:20px;
+
+  backdrop-filter:blur(12px);
+
+}
+
+
+
+/* Each player */
+
+.leader-row {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  background:
+  rgba(255,255,255,.08);
+
+  padding:20px;
+
+  border-radius:20px;
+
+  margin-bottom:15px;
+
+}
+
+
+
+.leader-info h3 {
+
+  margin:0;
+
+  font-size:20px;
+
+}
+
+
+
+.leader-info p {
+
+  margin:8px 0;
+
+  color:#c9c4e8;
+
+}
+
+
+
+/* GLX amount */
+
+.mine-score {
+
+  font-size:22px;
+
+  color:#33ffd8;
+
+}
+
+
+
+/* First place */
+
+.leader-row:first-child {
+
+  border:
+  1px solid rgba(255,215,0,.5);
+
+}

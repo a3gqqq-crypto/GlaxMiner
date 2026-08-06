@@ -1,27 +1,75 @@
-function StatsCards() {
-  return (
-    <div className="top-stats">
+import "../styles/StatsCards.css";
 
-      <div className="top-stat">
-        <span>⏱️</span>
-        <h3>5 Hours</h3>
-        <p>Duration</p>
-      </div>
 
-      <div className="top-stat">
-        <span>💎</span>
-        <h3>100 GLX</h3>
-        <p>Reward</p>
-      </div>
+function StatsCards(){
 
-      <div className="top-stat">
-        <span>⚡</span>
-        <h3>Level 1</h3>
-        <p>Power</p>
-      </div>
+return(
 
-    </div>
-  );
+<div className="stats-container">
+
+
+<div className="stat-card">
+
+<div className="stat-icon">
+⏱️
+</div>
+
+<h3>
+5h
+</h3>
+
+<p>
+Duration
+</p>
+
+</div>
+
+
+
+
+<div className="stat-card">
+
+<div className="stat-icon">
+💎
+</div>
+
+<h3>
+100
+</h3>
+
+<p>
+Rewards/Cycle
+</p>
+
+</div>
+
+
+
+
+<div className="stat-card">
+
+<div className="stat-icon">
+💎
+</div>
+
+<h3>
+9
+</h3>
+
+<p>
+Daily Rewards
+</p>
+
+</div>
+
+
+
+</div>
+
+
+);
+
 }
+
 
 export default StatsCards;

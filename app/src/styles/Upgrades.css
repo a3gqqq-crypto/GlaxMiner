@@ -1,0 +1,108 @@
+.upgrade-card {
+
+  margin-top:20px;
+
+  padding:25px;
+
+
+  border-radius:28px;
+
+
+  background:
+
+  linear-gradient(
+    145deg,
+    rgba(70,50,150,.45),
+    rgba(15,15,35,.85)
+  );
+
+
+  border:
+
+  1px solid rgba(255,255,255,.12);
+
+
+  box-shadow:
+
+  0 0 35px rgba(120,90,255,.2);
+
+}
+
+
+
+.upgrade-card h2 {
+
+  font-size:26px;
+
+  margin-bottom:20px;
+
+}
+
+
+
+.upgrade-card p {
+
+  font-size:20px;
+
+  margin:10px 0;
+
+}
+
+
+
+.upgrade-card span {
+
+  color:#b9b5d8;
+
+  font-size:16px;
+
+}
+
+
+
+.upgrade-card button {
+
+  width:100%;
+
+  margin-top:25px;
+
+
+  padding:16px;
+
+
+  border:none;
+
+
+  border-radius:18px;
+
+
+  font-size:17px;
+
+  font-weight:800;
+
+
+  color:white;
+
+
+  background:
+
+  linear-gradient(
+    135deg,
+    #7c4dff,
+    #4b2aad
+  );
+
+
+  cursor:pointer;
+
+}
+
+
+
+.upgrade-card button:disabled {
+
+  opacity:.5;
+
+  cursor:not-allowed;
+
+}

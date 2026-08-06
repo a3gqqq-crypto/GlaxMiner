@@ -1,0 +1,111 @@
+.balance-card {
+
+  width:100%;
+
+  padding:22px;
+
+  margin:15px auto;
+
+
+  border-radius:28px;
+
+
+  background:
+  linear-gradient(
+    145deg,
+    #12345b,
+    #24105a
+  );
+
+
+  text-align:center;
+
+
+  box-shadow:
+  0 0 30px rgba(0,150,255,.2);
+
+}
+
+
+
+.balance-title{
+
+  font-size:16px;
+
+  color:#b9c7ff;
+
+  margin-bottom:10px;
+
+}
+
+
+
+.balance-number{
+
+  font-size:48px;
+
+  font-weight:900;
+
+  margin:0;
+
+}
+
+
+
+.balance-coin{
+
+  color:#00eaff;
+
+  font-size:22px;
+
+  font-weight:800;
+
+  margin-top:5px;
+
+}
+
+
+
+.reward-box{
+
+
+  margin-top:20px;
+
+
+  padding:15px;
+
+
+  border-radius:20px;
+
+
+  background:
+  rgba(255,255,255,.08);
+
+
+}
+
+
+
+.reward-box h3{
+
+  margin:0;
+
+  font-size:16px;
+
+  color:#aaa;
+
+}
+
+
+
+.reward-box p{
+
+  margin:8px 0 0;
+
+  color:#00ffae;
+
+  font-size:24px;
+
+  font-weight:900;
+
+}

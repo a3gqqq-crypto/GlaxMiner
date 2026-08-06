@@ -1,19 +1,65 @@
+import "../styles/BalanceCard.css";
+
 import { useGame } from "../context/GameContext";
 
-function BalanceCard() {
-  const { game } = useGame();
 
-  return (
-    <div className="balance-card">
-      <p>Your Balance</p>
+function BalanceCard(){
 
-      <h1>{game.balance} GLX</h1>
+const { game } = useGame();
 
-      <span>
-        Reward: {game.pickaxeLevel ? `${100 + (game.pickaxeLevel - 1) * 25} GLX` : "100 GLX"}
-      </span>
-    </div>
-  );
+
+const reward =
+game.pickaxeLevel
+? 100 + (game.pickaxeLevel - 1) * 25
+: 100;
+
+
+
+return(
+
+<div className="balance-card">
+
+
+<p>
+💎 Your Balance
+</p>
+
+
+
+<h1>
+{Number(game.balance).toFixed(2)}
+</h1>
+
+
+<span>
+GLX
+</span>
+
+
+
+<div className="reward-box">
+
+
+<p>
+⛏️ Mining Reward
+</p>
+
+
+<strong>
++{reward} GLX
+</strong>
+
+
+</div>
+
+
+
+</div>
+
+
+);
+
 }
+
 
 export default BalanceCard;
