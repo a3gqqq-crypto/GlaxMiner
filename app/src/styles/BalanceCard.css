@@ -2,7 +2,7 @@
 
   width:100%;
 
-  padding:22px;
+  padding:20px;
 
   margin:15px auto;
 
@@ -11,10 +11,11 @@
 
 
   background:
+
   linear-gradient(
-    145deg,
-    #12345b,
-    #24105a
+    135deg,
+    #203b85,
+    #35145f
   );
 
 
@@ -22,63 +23,88 @@
 
 
   box-shadow:
-  0 0 30px rgba(0,150,255,.2);
+
+  0 0 35px rgba(80,120,255,.25);
+
 
 }
 
 
 
-.balance-title{
+/* Your Balance text */
 
-  font-size:16px;
-
-  color:#b9c7ff;
-
-  margin-bottom:10px;
-
-}
-
-
-
-.balance-number{
-
-  font-size:48px;
-
-  font-weight:900;
+.balance-card > p:first-child {
 
   margin:0;
 
+  color:#c8c8e8;
+
+  font-size:15px;
+
 }
 
 
 
-.balance-coin{
+/* Main GLX number */
 
-  color:#00eaff;
+.balance-card h1 {
 
-  font-size:22px;
+  margin:8px 0 0;
 
-  font-weight:800;
+
+  font-size:46px;
+
+
+  font-weight:900;
+
+
+  color:white;
+
+
+  line-height:1;
+
+}
+
+
+
+/* GLX text */
+
+.balance-card span {
+
+  display:block;
+
 
   margin-top:5px;
 
+
+  color:#00eaff;
+
+
+  font-size:22px;
+
+
+  font-weight:800;
+
 }
 
 
 
-.reward-box{
+/* Mining reward box */
+
+.reward-box {
 
 
-  margin-top:20px;
+  margin-top:18px;
 
 
-  padding:15px;
+  padding:14px;
 
 
-  border-radius:20px;
+  border-radius:18px;
 
 
   background:
+
   rgba(255,255,255,.08);
 
 
@@ -86,26 +112,42 @@
 
 
 
-.reward-box h3{
+/* Mining Reward text */
+
+.reward-box p {
+
 
   margin:0;
 
-  font-size:16px;
 
-  color:#aaa;
+  color:#b9b9c8;
+
+
+  font-size:14px;
+
 
 }
 
 
 
-.reward-box p{
+/* Reward number */
 
-  margin:8px 0 0;
+.reward-box strong {
+
+
+  display:block;
+
+
+  margin-top:8px;
+
 
   color:#00ffae;
 
-  font-size:24px;
+
+  font-size:26px;
+
 
   font-weight:900;
+
 
 }
