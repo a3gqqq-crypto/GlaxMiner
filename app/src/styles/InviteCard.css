@@ -1,106 +1,163 @@
-.invite-card{
+.invite-card {
 
-margin-top:20px;
+  width:100%;
 
-background:
-linear-gradient(
-180deg,
-#111827,
-#090d18
-);
-
-border-radius:25px;
-
-padding:20px;
-
-border:
-1px solid rgba(255,255,255,.1);
-
-}
+  margin:15px auto;
 
 
-.invite-card h2{
-
-color:white;
-
-font-size:22px;
-
-margin-bottom:20px;
-
-}
+  padding:18px;
 
 
+  background:
 
-.invite-code{
+  linear-gradient(
+    145deg,
+    #111827,
+    #080d1c
+  );
 
-background:
-rgba(255,255,255,.05);
 
-border:
-1px solid rgba(255,255,255,.1);
+  border-radius:28px;
 
-border-radius:12px;
 
-padding:15px;
+  border:
 
-text-align:center;
+  1px solid rgba(255,255,255,.1);
 
-font-size:20px;
 
-font-weight:800;
+  box-shadow:
 
-margin-bottom:15px;
+  0 0 25px rgba(0,150,255,.12);
 
 }
 
 
 
-.invite-buttons{
+/* Title */
 
-display:flex;
+.invite-card h2 {
 
-gap:10px;
+  margin:0 0 15px;
+
+
+  color:white;
+
+
+  font-size:21px;
+
+
+  font-weight:900;
+
+}
+
+
+
+/* Invite code */
+
+.invite-code {
+
+
+  padding:14px;
+
+
+  border-radius:18px;
+
+
+  text-align:center;
+
+
+  background:
+
+  rgba(255,255,255,.08);
+
+
+  border:
+
+  1px solid rgba(255,255,255,.1);
+
+
+  color:#00eaff;
+
+
+  font-size:18px;
+
+
+  font-weight:900;
+
+
+  margin-bottom:15px;
 
 }
 
 
 
-.invite-buttons button{
+/* Buttons */
+
+.invite-buttons {
 
 
-flex:1;
-
-padding:12px 8px;
-
-border:none;
-
-border-radius:12px;
-
-font-weight:700;
-
-color:white;
+  display:flex;
 
 
-background:
-linear-gradient(
-135deg,
-#0066ff,
-#00c6ff
-);
+  gap:10px;
 
-
-cursor:pointer;
 
 }
 
 
-.invite-buttons button:last-child{
 
-background:
-linear-gradient(
-135deg,
-#d946ef,
-#ec4899
-);
+.invite-buttons button {
+
+
+  flex:1;
+
+
+  height:48px;
+
+
+  border:none;
+
+
+  border-radius:16px;
+
+
+  color:white;
+
+
+  font-size:14px;
+
+
+  font-weight:800;
+
+
+  background:
+
+
+  linear-gradient(
+    135deg,
+    #0066ff,
+    #00c6ff
+  );
+
+
+  cursor:pointer;
+
+
+}
+
+
+
+.invite-buttons button:last-child {
+
+
+  background:
+
+
+  linear-gradient(
+    135deg,
+    #d946ef,
+    #ec4899
+  );
+
 
 }
