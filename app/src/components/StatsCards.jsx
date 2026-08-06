@@ -3,71 +3,67 @@ import "../styles/StatsCards.css";
 
 function StatsCards(){
 
-return(
+  return (
 
-<div className="stats-container">
-
-
-<div className="stat-card">
-
-<div className="stat-icon">
-⏱️
-</div>
-
-<h3>
-5h
-</h3>
-
-<p>
-Duration
-</p>
-
-</div>
+    <div className="stats-container">
 
 
+      <div className="stat-card">
 
+        <div className="stat-icon">
+          ⏱️
+        </div>
 
-<div className="stat-card">
+        <h3>
+          5h
+        </h3>
 
-<div className="stat-icon">
-💎
-</div>
+        <p>
+          Duration
+        </p>
 
-<h3>
-100
-</h3>
-
-<p>
-Rewards/Cycle
-</p>
-
-</div>
+      </div>
 
 
 
+      <div className="stat-card">
 
-<div className="stat-card">
+        <div className="stat-icon">
+          💎
+        </div>
 
-<div className="stat-icon">
-💎
-</div>
+        <h3>
+          100
+        </h3>
 
-<h3>
-9
-</h3>
+        <p>
+          Rewards/Cycle
+        </p>
 
-<p>
-Daily Rewards
-</p>
-
-</div>
-
+      </div>
 
 
-</div>
+
+      <div className="stat-card">
+
+        <div className="stat-icon">
+          💎
+        </div>
+
+        <h3>
+          9
+        </h3>
+
+        <p>
+          Daily Rewards
+        </p>
+
+      </div>
 
 
-);
+    </div>
+
+  );
 
 }
 
