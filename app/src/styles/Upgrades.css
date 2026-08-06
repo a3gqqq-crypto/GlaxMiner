@@ -1,19 +1,22 @@
 .upgrade-card {
 
-  margin-top:20px;
+  width:100%;
 
-  padding:25px;
+  margin:20px auto;
 
 
-  border-radius:28px;
+  padding:22px;
+
+
+  border-radius:30px;
 
 
   background:
 
   linear-gradient(
     145deg,
-    rgba(70,50,150,.45),
-    rgba(15,15,35,.85)
+    #21145a,
+    #0b1228
   );
 
 
@@ -24,73 +27,128 @@
 
   box-shadow:
 
-  0 0 35px rgba(120,90,255,.2);
+  0 0 30px rgba(120,90,255,.2);
+
+
+  text-align:center;
 
 }
 
 
+
+/* Pickaxe title */
 
 .upgrade-card h2 {
 
-  font-size:26px;
+  margin:0 0 20px;
 
-  margin-bottom:20px;
+
+  font-size:28px;
+
+
+  font-weight:900;
+
+
+  color:white;
 
 }
 
 
+
+/* Level */
 
 .upgrade-card p {
 
-  font-size:20px;
-
   margin:10px 0;
+
+
+  font-size:22px;
+
+
+  font-weight:800;
+
+
+  color:#00eaff;
 
 }
 
 
+
+/* Reward and cost */
 
 .upgrade-card span {
 
-  color:#b9b5d8;
+  display:block;
+
+
+  margin:12px 0;
+
+
+  padding:12px;
+
+
+  border-radius:16px;
+
+
+  background:
+
+  rgba(255,255,255,.08);
+
+
+  color:#ddd;
+
 
   font-size:16px;
+
+
+  font-weight:700;
 
 }
 
 
 
+/* Upgrade button */
+
 .upgrade-card button {
+
 
   width:100%;
 
-  margin-top:25px;
+
+  height:60px;
 
 
-  padding:16px;
+  margin-top:20px;
 
 
   border:none;
 
 
-  border-radius:18px;
-
-
-  font-size:17px;
-
-  font-weight:800;
+  border-radius:20px;
 
 
   color:white;
 
 
+  font-size:20px;
+
+
+  font-weight:900;
+
+
   background:
 
+
   linear-gradient(
-    135deg,
-    #7c4dff,
-    #4b2aad
+    90deg,
+    #00b7ff,
+    #6b5cff
   );
+
+
+  box-shadow:
+
+  0 0 25px rgba(0,180,255,.4);
 
 
   cursor:pointer;
@@ -101,8 +159,11 @@
 
 .upgrade-card button:disabled {
 
+
   opacity:.5;
 
-  cursor:not-allowed;
+
+  box-shadow:none;
+
 
 }
