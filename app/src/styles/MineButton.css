@@ -1,77 +1,103 @@
 .mine-button {
 
-  width:90%;
+  width:100%;
 
-  max-width:300px;
+  height:58px;
 
-  padding:18px;
 
-  margin-top:20px;
+  margin-top:18px;
+
 
   border:none;
 
+
   border-radius:20px;
-
-
-  font-size:20px;
-
-  font-weight:800;
 
 
   color:white;
 
 
+  font-size:20px;
+
+
+  font-weight:900;
+
+
   background:
 
   linear-gradient(
-    135deg,
-    #8065ff,
-    #4320c8
+    90deg,
+    #00b7ff,
+    #6b5cff
   );
+
+
+  box-shadow:
+
+  0 0 25px rgba(0,180,255,.45);
 
 
   cursor:pointer;
 
 
-  box-shadow:
-
-  0 0 25px rgba(120,90,255,.7);
-
-
-  transition:.3s;
+  transition:.2s;
 
 }
 
 
 
-.mine-button:hover{
+.mine-button:hover {
 
-  transform:translateY(-4px);
-
-}
-
-
-
-.mine-button:disabled{
-
-  opacity:.6;
-
-  cursor:not-allowed;
-
-  box-shadow:none;
+  transform:translateY(-3px);
 
 }
 
 
 
-.mine-button.claim{
+/* Mining running */
+
+.mine-button:disabled {
+
 
   background:
 
   linear-gradient(
-    135deg,
-    #00e676,
-    #00994d
+    90deg,
+    #374151,
+    #1f2937
   );
+
+
+  color:#aaa;
+
+
+  box-shadow:none;
+
+
+  cursor:not-allowed;
+
+
+}
+
+
+
+/* Claim button */
+
+.mine-button.claim {
+
+
+  background:
+
+  linear-gradient(
+    90deg,
+    #00e676,
+    #00a152
+  );
+
+
+  box-shadow:
+
+  0 0 25px rgba(0,255,120,.5);
+
 
 }
