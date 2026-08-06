@@ -1,19 +1,22 @@
 .wallet-card {
 
-  margin-top:20px;
+  width:100%;
 
-  padding:25px;
+  margin:20px auto;
 
 
-  border-radius:28px;
+  padding:22px;
+
+
+  border-radius:30px;
 
 
   background:
 
   linear-gradient(
     145deg,
-    rgba(70,50,150,.45),
-    rgba(15,15,35,.85)
+    #21145a,
+    #0b1228
   );
 
 
@@ -24,50 +27,71 @@
 
   box-shadow:
 
-  0 0 35px rgba(120,90,255,.2);
+  0 0 30px rgba(120,90,255,.2);
 
 }
 
 
+
+/* Title */
 
 .wallet-card h2 {
 
   text-align:center;
 
+
+  margin:0;
+
+
   font-size:28px;
 
-  margin-bottom:10px;
+
+  font-weight:900;
+
 
 }
 
 
+
+/* Description */
 
 .wallet-card > p {
 
+
   text-align:center;
 
-  color:#aaa8c5;
 
-  margin-bottom:25px;
+  color:#aaa;
+
+
+  font-size:15px;
+
+
+  margin:10px 0 20px;
+
 
 }
 
 
 
+/* Wallet items */
 
 .wallet-item {
 
+
   display:flex;
 
+
   align-items:center;
+
 
   gap:15px;
 
 
-  padding:18px;
+  padding:16px;
 
 
-  margin-bottom:15px;
+  margin-bottom:12px;
 
 
   border-radius:20px;
@@ -75,26 +99,43 @@
 
   background:
 
-  rgba(255,255,255,.07);
+
+  rgba(255,255,255,.08);
+
+
+
+  border:
+
+  1px solid rgba(255,255,255,.08);
 
 
 }
 
 
 
-.wallet-item:first-letter {
+.wallet-item div:first-child {
 
-  font-size:25px;
+
+  font-size:30px;
+
 
 }
 
 
+
+/* Text */
 
 .wallet-item h3 {
 
+
   margin:0;
 
+
   font-size:17px;
+
+
+  color:white;
+
 
 }
 
@@ -102,40 +143,50 @@
 
 .wallet-item span {
 
-  color:#8f95b5;
 
   font-size:13px;
+
+
+  color:#9da3c7;
+
 
 }
 
 
 
+/* Button */
+
 .wallet-card button {
+
 
   width:100%;
 
-  margin-top:15px;
 
-  padding:16px;
+  height:55px;
+
+
+  margin-top:15px;
 
 
   border:none;
 
-  border-radius:18px;
 
-
-  color:white;
-
-  font-size:16px;
-
-  font-weight:bold;
+  border-radius:20px;
 
 
   background:
 
-  rgba(255,255,255,.15);
+
+  rgba(255,255,255,.12);
 
 
-  cursor:not-allowed;
+  color:#aaa;
+
+
+  font-size:17px;
+
+
+  font-weight:800;
+
 
 }
