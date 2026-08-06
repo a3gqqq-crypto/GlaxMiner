@@ -1,43 +1,114 @@
+import { useEffect, useState } from "react";
 import BottomNav from "../components/BottomNav";
+import "../styles/Leaderboard.css";
+
 
 function Leaderboard({ page, setPage }) {
+
+  const [users, setUsers] = useState([]);
+
+
+  useEffect(() => {
+
+    fetch("http://localhost:5000/api/users/leaderboard")
+      .then(res => res.json())
+      .then(data => {
+
+        setUsers(data.users || []);
+
+      })
+      .catch(err => console.log(err));
+
+
+  }, []);
+
+
+
   return (
+
     <div className="app-container">
 
+
       <main className="main-content">
+
 
         <h1 className="page-title">
           🏆 Leaderboard
         </h1>
 
 
-        <div className="upgrade-card">
 
-          <h2>🌎 Global Rankings</h2>
+        <div className="leaderboard-card">
 
-          <p>
-            Compete with miners worldwide and climb the ranks.
-          </p>
 
-          <br />
+          {
+            users.length === 0 ? (
 
-          <h3>🔥 Rankings Coming Soon</h3>
+              <p>No miners found</p>
 
-          <p>🥇 Top GLX Holders</p>
-          <p>⛏️ Highest Mining Power</p>
-          <p>💎 Highest Pickaxe Level</p>
-          <p>👑 VIP Rankings</p>
-          <p>🚀 Weekly Champions</p>
+            ) : (
 
-          <br />
 
-          <button disabled>
-            🚧 Coming Soon
-          </button>
+              users.map((user,index)=>(
+
+                <div 
+                  className="leader-row"
+                  key={index}
+                >
+
+
+                  <div className="leader-info">
+
+
+                    <h3>
+
+                      {index === 0 && "🥇 "}
+                      {index === 1 && "🥈 "}
+                      {index === 2 && "🥉 "}
+
+                      {user.username || "Miner"}
+
+                    </h3>
+
+
+                    <p>
+                      ⛏️ Pickaxe Level: {user.pickaxe_level}
+                    </p>
+
+
+                    <p>
+                      💰 Balance: {user.balance || 0} GLX
+                    </p>
+
+
+                  </div>
+
+
+
+                  <strong className="mine-score">
+
+                    ⛏️ {user.total_mined || 0} GLX
+
+                  </strong>
+
+
+
+                </div>
+
+
+              ))
+
+
+            )
+
+          }
+
 
         </div>
 
+
       </main>
+
 
 
       <BottomNav
@@ -45,8 +116,12 @@ function Leaderboard({ page, setPage }) {
         setPage={setPage}
       />
 
+
     </div>
+
   );
+
 }
+
 
 export default Leaderboard;
