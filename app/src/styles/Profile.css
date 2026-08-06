@@ -1,32 +1,39 @@
 .profile-card {
 
-  margin-top:20px;
+  width:100%;
 
-  padding:25px;
+  margin:20px auto;
 
 
-  border-radius:28px;
+  padding:22px;
+
+
+  border-radius:30px;
 
 
   background:
 
   linear-gradient(
     145deg,
-    rgba(70,50,150,.45),
-    rgba(15,15,35,.85)
+    #21145a,
+    #0b1228
   );
 
 
-  border:1px solid rgba(255,255,255,.12);
+  border:
+
+  1px solid rgba(255,255,255,.12);
 
 
   box-shadow:
 
-  0 0 35px rgba(120,90,255,.2);
+  0 0 30px rgba(120,90,255,.2);
 
 }
 
 
+
+/* Top profile */
 
 .profile-top {
 
@@ -34,79 +41,7 @@
 
   align-items:center;
 
-  gap:20px;
-
-  margin-bottom:20px;
-
-}
-
-
-
-.profile-avatar {
-
-  width:70px;
-
-  height:70px;
-
-  border-radius:50%;
-
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-
-  font-size:35px;
-
-
-  background:
-
-  rgba(255,255,255,.1);
-
-
-  box-shadow:
-
-  0 0 20px rgba(120,90,255,.5);
-
-}
-
-
-
-.profile-top h2 {
-
-  margin:0;
-
-  font-size:24px;
-
-}
-
-
-
-.profile-top p {
-
-  color:#b9b5d8;
-
-}
-
-
-
-.profile-card hr {
-
-  border:none;
-
-  height:1px;
-
-  background:rgba(255,255,255,.15);
-
-  margin:20px 0;
-
-}
-
-
-
-.profile-card h3 {
+  gap:15px;
 
   margin-bottom:15px;
 
@@ -114,51 +49,177 @@
 
 
 
-.profile-item {
-
-  padding:14px;
-
-  margin-bottom:10px;
+.profile-avatar {
 
 
-  border-radius:15px;
+  width:60px;
+
+
+  height:60px;
+
+
+  border-radius:50%;
+
+
+  display:flex;
+
+
+  align-items:center;
+
+
+  justify-content:center;
+
+
+  font-size:30px;
 
 
   background:
 
-  rgba(255,255,255,.07);
+  linear-gradient(
+    135deg,
+    #00eaff,
+    #7c4dff
+  );
 
 
-  font-size:16px;
+  box-shadow:
+
+  0 0 20px rgba(0,200,255,.4);
 
 }
 
 
 
-.profile-card button {
+.profile-top h2 {
 
-  width:100%;
 
-  margin-top:20px;
+  margin:0;
 
-  padding:16px;
+
+  font-size:22px;
+
+
+  font-weight:900;
+
+
+}
+
+
+
+.profile-top p {
+
+
+  margin:5px 0 0;
+
+
+  color:#aaa;
+
+
+}
+
+
+
+/* Divider */
+
+.profile-card hr {
 
 
   border:none;
 
-  border-radius:18px;
 
-
-  color:white;
-
-  font-weight:bold;
+  height:1px;
 
 
   background:
 
-  rgba(255,255,255,.15);
+  rgba(255,255,255,.12);
 
 
-  cursor:not-allowed;
+  margin:18px 0;
+
+
+}
+
+
+
+/* Section titles */
+
+.profile-card h3 {
+
+
+  margin-bottom:12px;
+
+
+  font-size:19px;
+
+
+}
+
+
+
+/* Items */
+
+.profile-item {
+
+
+  padding:13px;
+
+
+  margin-bottom:10px;
+
+
+  border-radius:18px;
+
+
+  background:
+
+
+  rgba(255,255,255,.08);
+
+
+  font-size:15px;
+
+
+  color:white;
+
+
+}
+
+
+
+/* Bottom button */
+
+.profile-card button {
+
+
+  width:100%;
+
+
+  height:55px;
+
+
+  margin-top:18px;
+
+
+  border:none;
+
+
+  border-radius:20px;
+
+
+  color:white;
+
+
+  font-size:16px;
+
+
+  font-weight:800;
+
+
+  background:
+
+
+  rgba(255,255,255,.12);
+
 
 }
