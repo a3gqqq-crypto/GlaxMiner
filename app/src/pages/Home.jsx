@@ -6,52 +6,48 @@ import ProgressBar from "../components/ProgressBar";
 import InviteCard from "../components/InviteCard";
 import BottomNav from "../components/BottomNav";
 
+import { useGame } from "../context/GameContext";
+
 import "../styles/Home.css";
 
-
 function Home({ page, setPage }) {
+  const { gameLoading } = useGame();
 
   return (
-
     <div className="app-container">
-
-
       <main className="main-content">
-
 
         <Header />
 
+        {gameLoading ? (
+          <div className="game-loading">
+            <div className="game-loading-spinner"></div>
+            <div className="game-loading-text">
+              Loading...
+            </div>
+          </div>
+        ) : (
+          <>
+            <StatsCards />
 
-        <StatsCards />
+            <BalanceCard />
 
+            <MiningCard />
 
-        <BalanceCard />
+            <ProgressBar />
 
-
-        <MiningCard />
-
-
-        <ProgressBar />
-
-
-        <InviteCard />
-
+            <InviteCard />
+          </>
+        )}
 
       </main>
-
-
 
       <BottomNav
         page={page}
         setPage={setPage}
       />
-
-
     </div>
-
   );
-
 }
-
 
 export default Home;

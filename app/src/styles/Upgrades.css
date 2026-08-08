@@ -1,169 +1,64 @@
 .upgrade-card {
-
-  width:100%;
-
-  margin:20px auto;
-
-
-  padding:22px;
-
-
-  border-radius:30px;
-
-
-  background:
-
-  linear-gradient(
-    145deg,
-    #21145a,
-    #0b1228
-  );
-
-
-  border:
-
-  1px solid rgba(255,255,255,.12);
-
-
-  box-shadow:
-
-  0 0 30px rgba(120,90,255,.2);
-
-
-  text-align:center;
-
+  width: 100%;
+  padding: 22px;
+  margin-top: 18px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #17133d, #0b0d20);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 25px rgba(100, 80, 255, 0.12);
+  overflow: hidden;
 }
-
-
-
-/* Pickaxe title */
 
 .upgrade-card h2 {
-
-  margin:0 0 20px;
-
-
-  font-size:28px;
-
-
-  font-weight:900;
-
-
-  color:white;
-
+  margin: 0 0 14px;
+  font-size: 22px;
 }
-
-
-
-/* Level */
 
 .upgrade-card p {
-
-  margin:10px 0;
-
-
-  font-size:22px;
-
-
-  font-weight:800;
-
-
-  color:#00eaff;
-
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
 }
-
-
-
-/* Reward and cost */
 
 .upgrade-card span {
-
-  display:block;
-
-
-  margin:12px 0;
-
-
-  padding:12px;
-
-
-  border-radius:16px;
-
-
-  background:
-
-  rgba(255,255,255,.08);
-
-
-  color:#ddd;
-
-
-  font-size:16px;
-
-
-  font-weight:700;
-
+  display: inline-block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #aaa8c5;
 }
-
-
-
-/* Upgrade button */
 
 .upgrade-card button {
-
-
-  width:100%;
-
-
-  height:60px;
-
-
-  margin-top:20px;
-
-
-  border:none;
-
-
-  border-radius:20px;
-
-
-  color:white;
-
-
-  font-size:20px;
-
-
-  font-weight:900;
-
-
-  background:
-
-
-  linear-gradient(
-    90deg,
-    #00b7ff,
-    #6b5cff
-  );
-
-
-  box-shadow:
-
-  0 0 25px rgba(0,180,255,.4);
-
-
-  cursor:pointer;
-
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: 0;
+  border-radius: 16px;
+  color: white;
+  background: linear-gradient(135deg, #765cff, #4929c7);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-
-
 .upgrade-card button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
+@media (max-width: 500px) {
+  .upgrade-card {
+    padding: 18px;
+  }
 
-  opacity:.5;
+  .upgrade-card h2 {
+    font-size: 20px;
+  }
 
+  .upgrade-card p {
+    font-size: 16px;
+  }
 
-  box-shadow:none;
-
-
+  .upgrade-card span {
+    font-size: 13px;
+  }
 }

@@ -1,163 +1,160 @@
 .invite-card {
+  width: 100%;
+  box-sizing: border-box;
 
-  width:100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
 
-  margin:15px auto;
+  padding: 16px;
 
+  border-radius: 20px;
 
-  padding:18px;
-
-
-  background:
-
-  linear-gradient(
-    145deg,
+  background: linear-gradient(
+    180deg,
     #111827,
-    #080d1c
+    #090d18
   );
 
-
-  border-radius:28px;
-
-
-  border:
-
-  1px solid rgba(255,255,255,.1);
-
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   box-shadow:
-
-  0 0 25px rgba(0,150,255,.12);
-
+    0 8px 25px rgba(0, 0, 0, 0.18);
 }
-
 
 
 /* Title */
 
-.invite-card h2 {
+.invite-title {
+  display: flex;
+  align-items: center;
 
-  margin:0 0 15px;
+  gap: 8px;
 
-
-  color:white;
-
-
-  font-size:21px;
-
-
-  font-weight:900;
-
+  margin-bottom: 13px;
 }
 
+.invite-title span {
+  font-size: 20px;
+}
+
+.invite-title h2 {
+  margin: 0;
+
+  font-size: 19px;
+  font-weight: 800;
+
+  color: #ffffff;
+}
 
 
 /* Invite code */
 
 .invite-code {
+  width: 100%;
+  box-sizing: border-box;
 
+  padding: 14px 10px;
 
-  padding:14px;
+  border-radius: 12px;
 
+  background: rgba(255, 255, 255, 0.05);
 
-  border-radius:18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
+  text-align: center;
 
-  text-align:center;
+  font-size: 17px;
+  font-weight: 800;
 
+  color: #ffffff;
 
-  background:
-
-  rgba(255,255,255,.08);
-
-
-  border:
-
-  1px solid rgba(255,255,255,.1);
-
-
-  color:#00eaff;
-
-
-  font-size:18px;
-
-
-  font-weight:900;
-
-
-  margin-bottom:15px;
-
+  overflow-wrap: anywhere;
 }
-
 
 
 /* Buttons */
 
 .invite-buttons {
+  display: flex;
 
+  gap: 8px;
 
-  display:flex;
-
-
-  gap:10px;
-
-
+  margin-top: 11px;
 }
-
-
 
 .invite-buttons button {
+  flex: 1;
 
+  min-height: 40px;
 
-  flex:1;
+  padding: 9px 5px;
 
+  border: none;
+  border-radius: 11px;
 
-  height:48px;
+  color: white;
 
+  font-size: 12px;
+  font-weight: 700;
 
-  border:none;
-
-
-  border-radius:16px;
-
-
-  color:white;
-
-
-  font-size:14px;
-
-
-  font-weight:800;
-
-
-  background:
-
-
-  linear-gradient(
+  background: linear-gradient(
     135deg,
-    #0066ff,
-    #00c6ff
+    #087cff,
+    #08c5f5
   );
 
+  cursor: pointer;
 
-  cursor:pointer;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
 
+.invite-buttons button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
 
+.invite-buttons button:active {
+  transform: scale(0.97);
 }
 
 
+/* QR button */
 
-.invite-buttons button:last-child {
-
-
-  background:
-
-
-  linear-gradient(
+.invite-buttons .qr-button {
+  background: linear-gradient(
     135deg,
     #d946ef,
     #ec4899
   );
+}
 
 
+/* Mobile */
+
+@media (max-width: 500px) {
+
+  .invite-card {
+    padding: 14px;
+  }
+
+  .invite-title h2 {
+    font-size: 18px;
+  }
+
+  .invite-code {
+    font-size: 15px;
+    padding: 13px 8px;
+  }
+
+  .invite-buttons {
+    gap: 6px;
+  }
+
+  .invite-buttons button {
+    font-size: 11px;
+    min-height: 38px;
+    padding: 8px 3px;
+  }
 }

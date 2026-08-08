@@ -1,132 +1,94 @@
 .header {
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  margin:15px 0 20px;
-
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
 }
-
-
 
 .user-box {
-
-  display:flex;
-  align-items:center;
-
-  gap:12px;
-
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-
 
 .avatar-ring {
-
-  width:52px;
-  height:52px;
-
-  border-radius:50%;
-
-  padding:2px;
-
-  background:
-  linear-gradient(
-    135deg,
-    #00eaff,
-    #8b5cf6
-  );
-
-  box-shadow:
-  0 0 18px rgba(0,200,255,.4);
-
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  padding: 2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00d9ff, #785cff);
 }
-
-
 
 .avatar-ring img {
-
-  width:100%;
-  height:100%;
-
-  border-radius:50%;
-
-  background:#111827;
-
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #10142a;
 }
 
-
+.user-info {
+  min-width: 0;
+}
 
 .user-info h2 {
-
-  margin:0;
-
-  font-size:16px;
-
-  font-weight:800;
-
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-
 
 .user-info p {
-
-  margin:3px 0 0;
-
-  font-size:14px;
-
-  color:#00eaff;
-
-  font-weight:700;
-
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #00eaff;
+  font-weight: 700;
 }
-
-
 
 .free-badge {
-
-  display:flex;
-
-  align-items:center;
-
-  gap:6px;
-
-
-  background:
-  rgba(0,255,120,.12);
-
-
-  color:#00ff88;
-
-
-  padding:8px 14px;
-
-
-  border-radius:25px;
-
-
-  font-size:14px;
-
-  font-weight:800;
-
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: rgba(0, 255, 170, 0.1);
+  color: #00ffae;
+  font-size: 11px;
+  font-weight: 800;
 }
 
-
-
 .free-badge span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #00ffae;
+}
 
-  width:8px;
+@media (max-width: 500px) {
+  .header {
+    margin-bottom: 16px;
+  }
 
-  height:8px;
+  .avatar-ring {
+    width: 43px;
+    height: 43px;
+  }
 
+  .user-info h2 {
+    font-size: 14px;
+  }
 
-  background:#00ff88;
+  .user-info p {
+    font-size: 12px;
+  }
 
-
-  border-radius:50%;
-
-
-  box-shadow:
-  0 0 10px #00ff88;
-
+  .free-badge {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
 }

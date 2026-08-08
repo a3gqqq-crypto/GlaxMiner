@@ -1,65 +1,50 @@
 import "../styles/BalanceCard.css";
 
-import { useGame } from "../context/GameContext";
+function BalanceCard() {
+  // Temporary values
+  // We will connect these to the backend later.
+  const tokensEarned = 0;
+  const poolEarned = 0;
+  const poolLimit = 150000;
+  const tokensPerMinute = 0;
 
+  return (
+    <div className="token-card">
 
-function BalanceCard(){
+      {/* Tokens Earned */}
+      <div className="token-title">
+        <span className="token-dot"></span>
+        Tokens Earned
+      </div>
 
-const { game } = useGame();
+      <div className="token-earned">
+        💎 {tokensEarned.toFixed(6)}
+      </div>
 
+      {/* Pool + Mining Rate */}
+      <div className="token-info">
 
-const reward =
-game.pickaxeLevel
-? 100 + (game.pickaxeLevel - 1) * 25
-: 100;
+        <div className="pool-info">
+          <span>Total Pool Limit</span>
 
+          <strong>
+            {poolEarned.toLocaleString()} /{" "}
+            {poolLimit.toLocaleString()}
+          </strong>
+        </div>
 
+        <div className="rate-info">
+          <span>Tokens/min</span>
 
-return(
+          <strong>
+            {tokensPerMinute.toFixed(4)}
+          </strong>
+        </div>
 
-<div className="balance-card">
+      </div>
 
-
-<p>
-💎 Your Balance
-</p>
-
-
-
-<h1>
-{Number(game.balance).toFixed(2)}
-</h1>
-
-
-<span>
-GLX
-</span>
-
-
-
-<div className="reward-box">
-
-
-<p>
-⛏️ Mining Reward
-</p>
-
-
-<strong>
-+{reward} GLX
-</strong>
-
-
-</div>
-
-
-
-</div>
-
-
-);
-
+    </div>
+  );
 }
-
 
 export default BalanceCard;
