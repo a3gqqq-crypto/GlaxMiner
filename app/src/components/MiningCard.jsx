@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { useAuth } from "../context/AuthContext";
 import { useGame } from "../context/GameContext";
 
 import {
@@ -11,11 +10,13 @@ import {
 import "./MiningCard.css";
 
 function MiningCard() {
-  const { user } = useAuth();
 
+  // IMPORTANT:
+  // user is separate from game in GameContext
   const {
     game,
     setGame,
+    user,
   } = useGame();
 
   const {
@@ -30,29 +31,29 @@ function MiningCard() {
     Number(balance || 0)
   );
 
-  // =====================================================
-  // KEEP DISPLAY BALANCE IN SYNC
-  // =====================================================
+  // ==========================================
+  // KEEP BALANCE DISPLAY IN SYNC
+  // ==========================================
 
   useEffect(() => {
     setDisplayBalance(Number(balance || 0));
   }, [balance]);
 
-  // =====================================================
-  // COUNTDOWN + LIVE BALANCE
-  // =====================================================
+  // ==========================================
+  // LOCAL COUNTDOWN
+  // ==========================================
 
   useEffect(() => {
+
     if (!mining || !miningStart) {
       setTimeLeft(0);
       return;
     }
 
-    const update = () => {
-      const now = Date.now();
+    const updateTimer = () => {
 
       const elapsed = Math.floor(
-        (now - Number(miningStart)) / 1000
+        (Date.now() - Number(miningStart)) / 1000
       );
 
       const duration = 8 * 60 * 60;
@@ -64,47 +65,48 @@ function MiningCard() {
 
       setTimeLeft(remaining);
 
-      // Live mining reward
-      const rate = 5 / duration;
-
-      const liveEarned =
-        Math.min(elapsed, duration) * rate;
-
-      setDisplayBalance(
-        Number(balance || 0) + liveEarned
-      );
     };
 
-    update();
+    updateTimer();
 
     const interval = setInterval(
-      update,
+      updateTimer,
       1000
     );
 
     return () => {
       clearInterval(interval);
     };
+
   }, [
     mining,
     miningStart,
-    balance,
   ]);
 
-  // =====================================================
+  // ==========================================
   // SYNC WITH SERVER
-  // =====================================================
+  // ==========================================
 
   useEffect(() => {
-    if (!mining || !user?.telegram_id) {
+
+    if (!mining) {
+      return;
+    }
+
+    if (!user?.telegram_id) {
+      console.log("Mining sync waiting for Telegram ID...");
       return;
     }
 
     const sync = async () => {
+
       try {
+
         const data = await syncMining(
           user.telegram_id
         );
+
+        console.log("MINING SYNC:", data);
 
         if (!data.success) {
           console.error(
@@ -114,17 +116,26 @@ function MiningCard() {
           return;
         }
 
+        // ==========================================
+        // UPDATE BALANCE
+        // ==========================================
+
         if (data.balance !== undefined) {
+
           setGame((prev) => ({
             ...prev,
 
-            balance: Number(data.balance),
+            balance: Number(
+              data.balance
+            ),
 
-            mining: data.mining,
+            mining:
+              data.mining,
 
             miningStart:
-              data.miningStart ||
-              prev.miningStart,
+              data.mining
+                ? prev.miningStart
+                : 0,
 
             canClaim: false,
           }));
@@ -134,11 +145,12 @@ function MiningCard() {
           );
         }
 
-        // =================================================
-        // 8 HOURS FINISHED
-        // =================================================
+        // ==========================================
+        // MINING FINISHED
+        // ==========================================
 
         if (data.finished) {
+
           setGame((prev) => ({
             ...prev,
 
@@ -147,20 +159,30 @@ function MiningCard() {
             miningStart: 0,
 
             canClaim: false,
+
+            balance: Number(
+              data.balance
+            ),
           }));
 
           setTimeLeft(0);
         }
+
       } catch (err) {
+
         console.error(
           "Mining sync error:",
           err
         );
+
       }
+
     };
 
+    // Sync immediately
     sync();
 
+    // Then sync every 5 seconds
     const interval = setInterval(
       sync,
       5000
@@ -169,33 +191,32 @@ function MiningCard() {
     return () => {
       clearInterval(interval);
     };
+
   }, [
     mining,
     user,
     setGame,
   ]);
 
-  // =====================================================
+  // ==========================================
   // START MINING
-  // =====================================================
+  // ==========================================
 
   const handleStartMining = async () => {
+
+    if (!user?.telegram_id) {
+
+      console.error(
+        "No Telegram ID found."
+      );
+
+      return;
+    }
+
     try {
-      if (!user?.telegram_id) {
-        console.error(
-          "No Telegram ID found:",
-          user
-        );
-
-        alert(
-          "User account not loaded. Please reopen the app."
-        );
-
-        return;
-      }
 
       console.log(
-        "Starting mining for Telegram ID:",
+        "Starting mining for:",
         user.telegram_id
       );
 
@@ -204,12 +225,16 @@ function MiningCard() {
       );
 
       console.log(
-        "Start mining response:",
+        "START MINING RESPONSE:",
         data
       );
 
       if (!data.success) {
-        alert(data.message);
+
+        console.error(
+          data.message
+        );
+
         return;
       }
 
@@ -225,29 +250,26 @@ function MiningCard() {
       }));
 
       setTimeLeft(
-        8 * 60 * 60
+        data.duration || 8 * 60 * 60
       );
 
-      setDisplayBalance(
-        Number(balance || 0)
-      );
     } catch (err) {
+
       console.error(
         "Start mining error:",
         err
       );
 
-      alert(
-        "Could not start mining. Check the console."
-      );
     }
+
   };
 
-  // =====================================================
-  // FORMAT TIMER
-  // =====================================================
+  // ==========================================
+  // FORMAT TIME
+  // ==========================================
 
   function formatTime(seconds) {
+
     const hours =
       Math.floor(seconds / 3600);
 
@@ -269,9 +291,15 @@ function MiningCard() {
       2,
       "0"
     )}`;
+
   }
 
+  // ==========================================
+  // UI
+  // ==========================================
+
   return (
+
     <div className="mining-card">
 
       <div className="mining-image-box">
@@ -285,15 +313,21 @@ function MiningCard() {
         <div className="mining-bottom">
 
           <div className="mining-timer">
+
             {mining
               ? formatTime(timeLeft)
               : "08:00:00"}
+
           </div>
 
           {mining && (
+
             <div className="mining-progress-text">
+
               ⚡ Mining in progress...
+
             </div>
+
           )}
 
         </div>
@@ -301,16 +335,38 @@ function MiningCard() {
       </div>
 
       {!mining && (
+
         <button
           className="mine-button"
           onClick={handleStartMining}
         >
+
           ⛏️ Start Mining
+
         </button>
+
       )}
 
+      <div
+        style={{
+          marginTop: "10px",
+          textAlign: "center",
+          fontWeight: "800",
+          fontSize: "14px",
+          color: "#ffffff",
+        }}
+      >
+
+        💎 Tokens Earned:{" "}
+
+        {displayBalance.toFixed(6)}
+
+      </div>
+
     </div>
+
   );
+
 }
 
 export default MiningCard;
