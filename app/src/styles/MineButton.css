@@ -1,103 +1,60 @@
+/* ================================
+   MINING BUTTON
+================================ */
+
 .mine-button {
+  display: block;
+  width: 220px;
+  height: 44px;
 
-  width:100%;
+  margin: 16px auto 0;
+  padding: 0;
 
-  height:58px;
+  border: none;
+  border-radius: 12px;
 
+  background: linear-gradient(135deg, #00d9ff, #008cff);
+  color: #ffffff;
 
-  margin-top:18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
 
+  cursor: pointer;
 
-  border:none;
+  box-shadow: 0 5px 18px rgba(0, 190, 255, 0.22);
 
-
-  border-radius:20px;
-
-
-  color:white;
-
-
-  font-size:20px;
-
-
-  font-weight:900;
-
-
-  background:
-
-  linear-gradient(
-    90deg,
-    #00b7ff,
-    #6b5cff
-  );
-
-
-  box-shadow:
-
-  0 0 25px rgba(0,180,255,.45);
-
-
-  cursor:pointer;
-
-
-  transition:.2s;
-
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-
 
 .mine-button:hover {
-
-  transform:translateY(-3px);
-
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 190, 255, 0.32);
 }
 
-
-
-/* Mining running */
+.mine-button:active {
+  transform: scale(0.97);
+}
 
 .mine-button:disabled {
-
-
-  background:
-
-  linear-gradient(
-    90deg,
-    #374151,
-    #1f2937
-  );
-
-
-  color:#aaa;
-
-
-  box-shadow:none;
-
-
-  cursor:not-allowed;
-
-
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
 }
-
-
 
 /* Claim button */
 
 .mine-button.claim {
+  background: linear-gradient(135deg, #00e676, #00bfa5);
+  box-shadow: 0 5px 18px rgba(0, 230, 118, 0.22);
+}
 
+/* Mobile */
 
-  background:
-
-  linear-gradient(
-    90deg,
-    #00e676,
-    #00a152
-  );
-
-
-  box-shadow:
-
-  0 0 25px rgba(0,255,120,.5);
-
-
+@media (max-width: 600px) {
+  .mine-button {
+    width: 190px;
+    height: 42px;
+    font-size: 13px;
+  }
 }

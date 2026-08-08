@@ -18,15 +18,28 @@ export function GameProvider({ children }) {
   const [gameLoading, setGameLoading] = useState(true);
 
   useEffect(() => {
-    if (loading) return;
+    // Auth is still loading
+    if (loading) {
+      setGameLoading(true);
+      return;
+    }
+
+    // No logged-in user
     if (!user) {
       setGameLoading(false);
       return;
     }
 
+    let cancelled = false;
+
     async function fetchGame() {
+      // Keep the UI hidden while getting the real game state
+      setGameLoading(true);
+
       try {
         const data = await loadUser(user.telegram_id);
+
+        if (cancelled) return;
 
         if (data.success) {
           setGame({
@@ -38,13 +51,21 @@ export function GameProvider({ children }) {
           });
         }
       } catch (err) {
-        console.error(err);
+        if (!cancelled) {
+          console.error("Failed to load game data:", err);
+        }
+      } finally {
+        if (!cancelled) {
+          setGameLoading(false);
+        }
       }
-
-      setGameLoading(false);
     }
 
     fetchGame();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user, loading]);
 
   return (

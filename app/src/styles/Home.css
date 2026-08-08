@@ -1,157 +1,40 @@
-.app-container {
+/* =========================
+   GAME LOADING
+========================= */
 
-  min-height:100vh;
+.game-loading {
+  width: 100%;
+  min-height: 300px;
 
-  padding-bottom:100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
+  gap: 14px;
 }
 
+.game-loading-spinner {
+  width: 38px;
+  height: 38px;
 
+  border: 4px solid rgba(255, 255, 255, 0.12);
+  border-top-color: #00c8ff;
 
-.main-content {
+  border-radius: 50%;
 
-  max-width:420px;
-
-  margin:auto;
-
-  padding:20px;
-
+  animation: gameLoadingSpin 0.8s linear infinite;
 }
 
+.game-loading-text {
+  font-size: 14px;
+  font-weight: 700;
 
-
-/* GENERAL CARD STYLE */
-
-.home-card {
-
-  background:
-
-  rgba(40,30,90,.45);
-
-  border:
-
-  1px solid rgba(255,255,255,.12);
-
-  border-radius:25px;
-
-  padding:20px;
-
-  margin-top:20px;
-
-  backdrop-filter:blur(10px);
-
+  color: rgba(255, 255, 255, 0.65);
 }
 
-
-
-/* BALANCE AREA */
-
-.balance-card {
-
-  margin-top:25px;
-
-  background:
-
-  linear-gradient(
-    135deg,
-    #183b70,
-    #25155d
-  );
-
-  border-radius:25px;
-
-  padding:25px;
-
-  text-align:center;
-
-}
-
-
-
-.balance-title {
-
-  color:#c5c5d8;
-
-  font-size:16px;
-
-}
-
-
-
-.balance {
-
-  font-size:42px;
-
-  font-weight:900;
-
-  margin:10px 0;
-
-  color:white;
-
-}
-
-
-
-/* MINING BOX */
-
-.mining-box {
-
-  margin-top:20px;
-
-  padding:20px;
-
-  border-radius:20px;
-
-  background:
-
-  rgba(255,255,255,.05);
-
-}
-
-
-
-/* STATS */
-
-.stat-box {
-
-  display:flex;
-
-  justify-content:space-between;
-
-  margin-top:15px;
-
-}
-
-
-
-.stat {
-
-  flex:1;
-
-  margin:5px;
-
-  padding:15px;
-
-  text-align:center;
-
-  background:
-
-  rgba(255,255,255,.08);
-
-  border-radius:18px;
-
-}
-
-
-
-/* MOBILE */
-
-@media(max-width:500px){
-
-.main-content{
-
-padding:15px;
-
-}
-
+@keyframes gameLoadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }

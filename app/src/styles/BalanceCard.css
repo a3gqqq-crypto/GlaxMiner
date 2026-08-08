@@ -1,153 +1,122 @@
-.balance-card {
+.token-card {
+  width: 100%;
+  margin-top: 18px;
+  padding: 10px 20px;
+  box-sizing: border-box;
 
-  width:100%;
-
-  padding:20px;
-
-  margin:15px auto;
-
-
-  border-radius:28px;
-
+  border-radius: 22px;
 
   background:
+    linear-gradient(
+      145deg,
+      rgba(20, 32, 55, 0.95),
+      rgba(8, 16, 29, 0.98)
+    );
 
-  linear-gradient(
-    135deg,
-    #203b85,
-    #35145f
-  );
-
-
-  text-align:center;
-
+  border: 1px solid rgba(0, 217, 255, 0.18);
 
   box-shadow:
-
-  0 0 35px rgba(80,120,255,.25);
-
-
+    0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
+.token-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 
+  color: #d7e1ef;
 
-/* Your Balance text */
+  font-size: 15px;
+  font-weight: 600;
 
-.balance-card > p:first-child {
-
-  margin:0;
-
-  color:#c8c8e8;
-
-  font-size:15px;
-
+  margin-bottom: 2px;
 }
 
+.token-dot {
+  width: 8px;
+  height: 8px;
 
+  border-radius: 50%;
 
-/* Main GLX number */
+  background: #00d9ff;
 
-.balance-card h1 {
-
-  margin:8px 0 0;
-
-
-  font-size:46px;
-
-
-  font-weight:900;
-
-
-  color:white;
-
-
-  line-height:1;
-
+  box-shadow:
+    0 0 10px rgba(0, 217, 255, 0.8);
 }
 
+.token-earned {
+  margin-top: 0;
+  margin-bottom: 8px;
 
+  font-size: 30px;
+  font-weight: 800;
 
-/* GLX text */
+  color: #55d9ff;
 
-.balance-card span {
-
-  display:block;
-
-
-  margin-top:5px;
-
-
-  color:#00eaff;
-
-
-  font-size:22px;
-
-
-  font-weight:800;
-
+  letter-spacing: 0.3px;
 }
 
+.token-info {
+  display: grid;
 
+  grid-template-columns: 1.5fr 1fr;
 
-/* Mining reward box */
-
-.reward-box {
-
-
-  margin-top:18px;
-
-
-  padding:14px;
-
-
-  border-radius:18px;
-
-
-  background:
-
-  rgba(255,255,255,.08);
-
-
+  gap: 10px;
 }
 
+.pool-info,
+.rate-info {
+  padding: 10px;
 
+  border-radius: 14px;
 
-/* Mining Reward text */
+  background: rgba(35, 62, 100, 0.55);
 
-.reward-box p {
-
-
-  margin:0;
-
-
-  color:#b9b9c8;
-
-
-  font-size:14px;
-
-
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.pool-info span,
+.rate-info span {
+  display: block;
 
+  color: #9eacc1;
 
-/* Reward number */
+  font-size: 12px;
 
-.reward-box strong {
+  margin-bottom: 3px;
+}
 
+.pool-info strong,
+.rate-info strong {
+  display: block;
 
-  display:block;
+  color: #f4f7ff;
 
+  font-size: 15px;
 
-  margin-top:8px;
+  font-weight: 700;
+}
 
+.rate-info strong {
+  color: #65d5ff;
+}
 
-  color:#00ffae;
+@media (max-width: 500px) {
+  .token-card {
+    padding: 10px 17px;
+  }
 
+  .token-earned {
+    font-size: 26px;
+  }
 
-  font-size:26px;
+  .pool-info,
+  .rate-info {
+    padding: 9px;
+  }
 
-
-  font-weight:900;
-
-
+  .pool-info strong,
+  .rate-info strong {
+    font-size: 13px;
+  }
 }

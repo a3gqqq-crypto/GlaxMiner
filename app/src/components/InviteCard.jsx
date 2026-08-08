@@ -1,98 +1,68 @@
 import "../styles/InviteCard.css";
 
+function InviteCard() {
+  const inviteCode = "GLX5062715348";
 
-function InviteCard(){
+  const inviteLink =
+    `https://t.me/glaxminer_bot?start=${inviteCode}`;
 
+  function copyLink() {
+    navigator.clipboard.writeText(inviteLink);
+    alert("Invite link copied!");
+  }
 
-const inviteCode = "GLX5062715348";
+  function share() {
+    if (navigator.share) {
+      navigator.share({
+        title: "GLAXMINER",
+        text: "Join GLAXMINER and earn GLX!",
+        url: inviteLink,
+      });
+    } else {
+      copyLink();
+    }
+  }
 
+  function qrCode() {
+    window.open(
+      `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(inviteLink)}`,
+      "_blank"
+    );
+  }
 
-const inviteLink =
-`https://t.me/glaxminer_bot?start=${inviteCode}`;
+  return (
+    <div className="invite-card">
 
+      <div className="invite-title">
+        <span>👥</span>
+        <h2>Invite & Earn</h2>
+      </div>
 
+      <div className="invite-code">
+        {inviteCode}
+      </div>
 
-function copyLink(){
+      <div className="invite-buttons">
 
-navigator.clipboard.writeText(inviteLink);
+        <button onClick={copyLink}>
+          📋 Copy Link
+        </button>
 
-alert("Invite link copied!");
+        <button onClick={share}>
+          🔗 Share
+        </button>
 
+        <button
+          className="qr-button"
+          onClick={qrCode}
+        >
+          ▦ QR Code
+        </button>
+
+      </div>
+
+    </div>
+  );
 }
-
-
-
-function share(){
-
-if(navigator.share){
-
-navigator.share({
-title:"GLAXMINER",
-text:"Join GLAXMINER and earn GLX!",
-url:inviteLink
-});
-
-}
-
-}
-
-
-
-return(
-
-<div className="invite-card">
-
-
-<h2>
-👥 Invite & Earn
-</h2>
-
-
-
-<div className="invite-code">
-
-{inviteCode}
-
-</div>
-
-
-
-<div className="invite-buttons">
-
-
-<button
-onClick={copyLink}
->
-📋 Copy Link
-</button>
-
-
-
-<button
-onClick={share}
->
-🔗 Share
-</button>
-
-
-
-<button>
-▦ QR Code
-</button>
-
-
-
-</div>
-
-
-
-</div>
-
-
-);
-
-
-}
-
 
 export default InviteCard;
