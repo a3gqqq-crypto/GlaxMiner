@@ -3,7 +3,6 @@ import API from "./api";
 // ===============================
 // START MINING
 // ===============================
-
 export async function startMining(telegramId) {
   const res = await fetch(`${API}/mine/start`, {
     method: "POST",
@@ -21,7 +20,6 @@ export async function startMining(telegramId) {
 // ===============================
 // SYNC MINING
 // ===============================
-
 export async function syncMining(telegramId) {
   const res = await fetch(`${API}/mine/sync`, {
     method: "POST",
@@ -39,12 +37,7 @@ export async function syncMining(telegramId) {
 // ===============================
 // CLAIM
 // ===============================
-//
-// We don't actually use claiming anymore,
-// but keeping this here prevents errors
-// if another file still imports it.
-//
-
+// Kept for compatibility with old frontend code.
 export async function claimMining(telegramId) {
   const res = await fetch(`${API}/mine/claim`, {
     method: "POST",
