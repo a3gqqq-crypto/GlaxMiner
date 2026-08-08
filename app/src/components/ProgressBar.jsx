@@ -7,27 +7,26 @@ function ProgressBar() {
   const {
     mining,
     timeLeft,
-    canClaim
+    canClaim,
   } = useMiningContext();
 
-  // Don't show the progress card before mining starts
+  // Don't show before mining starts
   if (!mining && !canClaim) {
     return null;
   }
 
   let progress = 0;
 
-  // If mining is currently running, calculate ONLY from the timer.
+  // Mining is running
   if (mining) {
     const elapsed = MINING_DURATION - timeLeft;
 
     progress = (elapsed / MINING_DURATION) * 100;
 
-    // Keep between 0 and 100
     progress = Math.max(0, Math.min(100, progress));
   }
 
-  // Only show 100% when the actual mining cycle is finished.
+  // Finished
   if (!mining && canClaim) {
     progress = 100;
   }
@@ -36,17 +35,30 @@ function ProgressBar() {
     <div className="progress-card">
 
       <div className="progress-header">
-        <span>⛏️ Mining Progress</span>
-        <strong>{progress.toFixed(1)}%</strong>
+        <span>
+          ⛏️ Mining Progress
+        </span>
+
+        <strong>
+          {progress.toFixed(1)}%
+        </strong>
       </div>
 
       <div className="progress-track">
+
         <div
-          className="progress-fill"
+          className={`progress-fill ${
+            mining ? "is-mining" : "is-finished"
+          }`}
           style={{
-            width: `${progress}%`
+            width: `${progress}%`,
           }}
-        />
+        >
+          {mining && (
+            <div className="progress-shine" />
+          )}
+        </div>
+
       </div>
 
       <div className="progress-labels">
