@@ -346,6 +346,127 @@ describe("mining: 5 h enforced server-side, one claim per session", () => {
 });
 
 // ------------------------------------------------------------------
+describe("concurrent sync/status traffic during a finished session", () => {
+  it("50 simultaneous sync/status calls credit nothing; one claim pays once", async () => {
+    await login(9020);
+    await setUser(9020, {
+      balance: 10,
+      pickaxe_level: 2,
+      mining: true,
+      mining_start: Date.now() - 6 * HOUR_MS,
+    });
+    const traffic = await Promise.all(
+      Array.from({ length: 50 }, (_, i) =>
+        i % 2
+          ? call("POST", "/mine/sync", { userId: 9020 })
+          : call("GET", "/mine/status", { userId: 9020 })
+      )
+    );
+    assert.ok(traffic.every((r) => r.status === 200 || r.status === 404));
+    assert.equal(Number((await getUser(9020)).balance), 10);
+
+    const mixed = await Promise.all([
+      ...Array.from({ length: 25 }, () => call("POST", "/mine/claim", { userId: 9020 })),
+      ...Array.from({ length: 25 }, () => call("GET", "/mine/status", { userId: 9020 })),
+    ]);
+    const claims = mixed.slice(0, 25);
+    assert.equal(claims.filter((r) => r.body.success).length, 1);
+    assert.equal(claims.find((r) => r.body.success).body.reward, 125);
+    assert.equal(Number((await getUser(9020)).balance), 10 + 125);
+  });
+});
+
+// ------------------------------------------------------------------
+describe("deposits are disabled", () => {
+  const depositPaths = [
+    ["POST", "/wallet/deposit/usdt"],
+    ["POST", "/wallet/deposit/bnb"],
+    ["GET", "/wallet/balance/9030"],
+    ["POST", "/upgrade/wallet"],
+    ["POST", "/upgrade/wallet/deposit"],
+    ["POST", "/upgrade/wallet/history"],
+    ["POST", "/upgrade/auto-miner/buy"],
+  ];
+
+  for (const [method, url] of depositPaths) {
+    it(`${method} ${url} -> 503 unavailable (with or without auth)`, async () => {
+      for (const userId of [undefined, 9030]) {
+        const r = await call(method, url, {
+          userId,
+          body: method === "POST" ? { txHash: "0x" + "ab".repeat(32), telegramId: 9030 } : undefined,
+        });
+        assert.equal(r.status, 503);
+        assert.equal(r.body.message, "Deposits are unavailable");
+      }
+    });
+  }
+
+  it("the same tx hash replayed across every endpoint and user credits nothing", async () => {
+    await login(9031);
+    await login(9032);
+    const hash = "0x" + "cd".repeat(32);
+    await Promise.all(
+      [9031, 9032].flatMap((userId) =>
+        depositPaths
+          .filter(([m]) => m === "POST")
+          .flatMap(([, url]) => [hash, hash.toUpperCase().replace("0X", "0x")].map((txHash) =>
+            call("POST", url, { userId, body: { txHash, telegramId: 9031 } })
+          ))
+      )
+    );
+    for (const id of [9031, 9032]) {
+      const u = await getUser(id);
+      assert.equal(Number(u.balance), 0);
+      assert.equal(u.pickaxe_level, 1);
+    }
+    const t = await pool.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema='public'"
+    );
+    assert.deepEqual(t.rows.map((r) => r.table_name), ["users"]);
+  });
+});
+
+// ------------------------------------------------------------------
+describe("frontend and server routes match", () => {
+  it("every apiFetch path in app/src/api exists on the server", async () => {
+    const dir = path.join(__dirname, "..", "..", "app", "src", "api");
+    const calls = [];
+    for (const f of fs.readdirSync(dir)) {
+      const src = fs.readFileSync(path.join(dir, f), "utf8");
+      for (const m of src.matchAll(/apiFetch\("([^"]+)"(?:,\s*\{\s*method:\s*"(\w+)")?/g)) {
+        calls.push([m[2] || "GET", m[1]]);
+      }
+    }
+    assert.ok(calls.length >= 7, `found ${calls.length} calls`);
+    await login(9040);
+    for (const [method, url] of calls) {
+      const r = await call(method, url, { userId: 9040 });
+      assert.notEqual(r.status, 404, `${method} ${url}`);
+      assert.ok(r.body && typeof r.body.success === "boolean", `${method} ${url}`);
+    }
+  });
+
+  it("no frontend source calls localhost, addBalance, deposits or a body telegramId", () => {
+    const root = path.join(__dirname, "..", "..", "app", "src");
+    const files = execFileSync("git", ["ls-files", "app/src"], {
+      cwd: path.join(__dirname, "..", ".."),
+      encoding: "utf8",
+    })
+      .split("\n")
+      .filter((f) => /\.(js|jsx)$/.test(f));
+    const live = files.filter((f) => /app\/src\/(api|context|pages|components|hooks)\//.test(f) || /App\.jsx$|main\.jsx$/.test(f));
+    for (const f of live) {
+      const text = fs.readFileSync(path.join(root, "..", "..", f), "utf8");
+      assert.doesNotMatch(text, /localhost:\d+/, f);
+      assert.doesNotMatch(text, /addBalance/, f);
+      assert.doesNotMatch(text, /\/wallet\/|deposit\//i, f);
+      assert.doesNotMatch(text, /JSON\.stringify\(\{\s*telegramId/, f);
+      assert.doesNotMatch(text, /telegramId\s*=\s*1\b/, f);
+    }
+  });
+});
+
+// ------------------------------------------------------------------
 describe("pickaxe upgrade: original costs, authenticated, atomic", () => {
   it("each level costs exactly the original amount", async () => {
     await login(9101);
@@ -463,6 +584,21 @@ describe("rate limiting and CORS", () => {
       assert.deepEqual(codes, [200, 200, 200, 429, 429]);
       assert.equal((await c("POST", "/user/login", { userId: 9302 })).status, 200);
       assert.equal((await c("GET", "/user/me", { userId: 9301 })).status, 200);
+    } finally {
+      s.close();
+    }
+  });
+
+  it("CORS defaults to the production Mini App origin only", async () => {
+    delete process.env.ALLOWED_ORIGINS;
+    const { server: s, base } = await h.startServer(createApp());
+    try {
+      const good = await fetch(base + "/", { headers: { Origin: "https://glax-miner.vercel.app" } });
+      assert.equal(good.headers.get("access-control-allow-origin"), "https://glax-miner.vercel.app");
+      for (const origin of ["https://evil.example", "https://glax-miner.vercel.app.evil.example", "http://localhost:5173"]) {
+        const bad = await fetch(base + "/", { headers: { Origin: origin } });
+        assert.equal(bad.headers.get("access-control-allow-origin"), null, origin);
+      }
     } finally {
       s.close();
     }

@@ -8,6 +8,18 @@ const userRoutes = require("./routes/user");
 const miningRoutes = require("./routes/mining");
 const upgradeRoutes = require("./routes/upgrades");
 
+const DEFAULT_ORIGINS = "https://glax-miner.vercel.app";
+
+// Deposits and paid features are disabled in this release: a deposit is not
+// yet tied to its sender, so anyone could claim someone else's transaction.
+// Every former deposit / Auto Miner path answers 503 and credits nothing.
+function depositsUnavailable(req, res) {
+  res.status(503).json({
+    success: false,
+    message: "Deposits are unavailable",
+  });
+}
+
 // options.botToken    - override BOT_TOKEN (tests)
 // options.rateLimits  - override limits (tests)
 function createApp(options = {}) {
@@ -16,13 +28,15 @@ function createApp(options = {}) {
   // Behind Railway's proxy: use the client IP from X-Forwarded-For
   app.set("trust proxy", 1);
 
-  // CORS: allow all (as before) unless ALLOWED_ORIGINS is set
-  const allowed = (process.env.ALLOWED_ORIGINS || "")
+  // CORS: exact approved origins only. Default is the production Mini App;
+  // set ALLOWED_ORIGINS (comma-separated) to change it, e.g. to add
+  // http://localhost:5173 for local development.
+  const allowed = (process.env.ALLOWED_ORIGINS || DEFAULT_ORIGINS)
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
 
-  app.use(cors(allowed.length > 0 ? { origin: allowed } : undefined));
+  app.use(cors({ origin: allowed }));
 
   app.use(express.json({ limit: "16kb" }));
 
@@ -48,6 +62,10 @@ function createApp(options = {}) {
   // Tighter limit on requests that change state (every POST)
   const postActions = (req, res, next) =>
     req.method === "POST" ? actions(req, res, next) : next();
+
+  app.use("/wallet", depositsUnavailable);
+  app.use("/upgrade/wallet", depositsUnavailable);
+  app.use("/upgrade/auto-miner", depositsUnavailable);
 
   app.use("/user", auth, perUser, postActions, userRoutes);
   app.use("/mine", auth, perUser, postActions, miningRoutes);

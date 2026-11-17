@@ -4,8 +4,19 @@ const API =
 
 // Signed Telegram WebApp initData. The server verifies it and derives the
 // user from it; the client never sends its own Telegram ID.
+//
+// Local development only: outside Telegram you may set VITE_DEV_INIT_DATA in
+// app/.env.local to a real initData string from a test bot. The server still
+// verifies its signature. Production builds drop this branch entirely.
 export function getInitData() {
-  return window.Telegram?.WebApp?.initData || "";
+  const fromTelegram = window.Telegram?.WebApp?.initData;
+  if (fromTelegram) return fromTelegram;
+
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_DEV_INIT_DATA || "";
+  }
+
+  return "";
 }
 
 export async function apiFetch(path, { method = "GET", body } = {}) {
