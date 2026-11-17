@@ -21,6 +21,45 @@ async function run(log = console.log) {
     `);
     log("Tables:", tables.rows.map((r) => r.table_name).join(", ") || "(none)");
 
+    for (const { table_name: t } of tables.rows) {
+      const n = await client.query(`SELECT count(*)::int AS n FROM public."${t.replace(/"/g, '""')}"`);
+      log(`  ${t}: ${n.rows[0].n} rows`);
+    }
+
+    const idx = await client.query(`
+      SELECT tablename, indexname, indexdef FROM pg_indexes
+      WHERE schemaname = 'public' ORDER BY tablename, indexname
+    `);
+    log("Indexes:");
+    for (const r of idx.rows) log("  ", r.indexdef);
+
+    const cons = await client.query(`
+      SELECT conrelid::regclass::text AS tbl, conname, pg_get_constraintdef(oid) AS def
+      FROM pg_constraint
+      WHERE connamespace = 'public'::regnamespace
+      ORDER BY 1, 2
+    `);
+    log("Constraints:");
+    for (const r of cons.rows) log("  ", `${r.tbl}.${r.conname}: ${r.def}`);
+
+    const names = new Set(tables.rows.map((r) => r.table_name));
+    for (const t of ["usdt_deposits", "wallet_transactions"]) {
+      if (!names.has(t)) continue;
+      const hasHash = await client.query(
+        `SELECT 1 FROM information_schema.columns
+         WHERE table_schema = 'public' AND table_name = $1 AND column_name = 'tx_hash'`,
+        [t]
+      );
+      if (hasHash.rows.length === 0) continue;
+      const dup = await client.query(`
+        SELECT count(*)::int AS n FROM (
+          SELECT lower(tx_hash) FROM public.${t}
+          WHERE tx_hash IS NOT NULL GROUP BY 1 HAVING count(*) > 1
+        ) d
+      `);
+      log(`Duplicate tx hashes in ${t}: ${dup.rows[0].n}`);
+    }
+
     const cols = await client.query(`
       SELECT column_name, data_type
       FROM information_schema.columns

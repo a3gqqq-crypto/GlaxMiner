@@ -553,6 +553,26 @@ describe("existing data is preserved", () => {
     assert.deepEqual(after, before);
   });
 
+  it("backup tool: snapshot, restore into a fresh Postgres, counts and checksums match", async () => {
+    const os = require("node:os");
+    const { backup, verify } = require("../scripts/backup-verify");
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "glx-backup-test-"));
+    const before = (await pool.query("SELECT * FROM users ORDER BY id")).rows;
+
+    const manifest = await backup(dir);
+    assert.ok(manifest.tables.users.rows > 20);
+    const total = (await pool.query("SELECT sum(balance)::text AS t FROM users")).rows[0].t;
+    assert.equal(manifest.tables.users.balanceTotal, total);
+
+    const result = await verify(dir);
+    assert.deepEqual(result.problems, []);
+    assert.equal(result.ok, true);
+    assert.equal(result.tables.users.md5, manifest.tables.users.md5);
+
+    // the backup only reads
+    assert.deepEqual((await pool.query("SELECT * FROM users ORDER BY id")).rows, before);
+  });
+
   it("works if production's balance column was widened to NUMERIC", async () => {
     // The uncommitted server altered balance to NUMERIC on boot; if it ever
     // ran against production, the column may already be NUMERIC.

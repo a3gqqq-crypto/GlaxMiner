@@ -34,7 +34,9 @@ uncommitted 8 h / 5 GLX work, Auto Miner and deposits. None of that is in this r
 | Displayed values | The app showed 8 h and "5 GLX per cycle". It now shows the server's duration, reward and level | `MiningCard.jsx`, `ProgressBar.jsx`, `StatsCards.jsx` |
 | Telegram sign-in | `index.html` never loaded `telegram-web-app.js`, so `window.Telegram` was undefined and the app fell back to telegram_id `1` ("Developer") for everyone. The script is now loaded and the fallback removed; outside Telegram the app says "Open GlaxMiner from Telegram" | `app/index.html`, `app/src/context/AuthContext.jsx`, `app/src/App.jsx` |
 | Rate limiting | In-memory limits: 120 requests/min per IP, 60/min per user, 10 state-changing POSTs/min per user (429 beyond) | `server/middleware/rateLimit.js`, `server/app.js` |
-| CORS | Restricted to `ALLOWED_ORIGINS` when it is set | `server/app.js` |
+| CORS | Exact origins only: `https://glax-miner.vercel.app` by default, or the list in `ALLOWED_ORIGINS` | `server/app.js` |
+| Deposits | Every former deposit and Auto Miner path (`/wallet/*`, `/upgrade/wallet/*`, `/upgrade/auto-miner/*`) answers **503 "Deposits are unavailable"** and credits nothing. Nothing in the app can submit a deposit. Real deposits wait for sender-ownership verification (separate phase) | `server/app.js` |
+| Local development | Outside Telegram, a dev build can use `VITE_DEV_INIT_DATA` (a real initData from a test bot; the server still verifies it). Production builds strip this code | `app/src/api/api.js`, `app/.env.example` |
 | Secrets | `server/.env` and `bot/.env` untracked (local files kept); `.gitignore` rules; `.env.example` templates | root |
 | Schema | **No migrations.** The boot-time `CREATE TABLE IF NOT EXISTS users` moved verbatim to `server/db/init.js`; it never alters existing rows | `server/db/init.js` |
 | Preflight | `npm run preflight`: read-only report (in a READ ONLY transaction) | `server/scripts/preflight-check.js` |
@@ -190,6 +192,17 @@ git push --force --mirror origin
 
 Afterwards every clone must be re-cloned; commit hashes change (including `92c29f4`); GitHub may keep cached views, so treat the old secrets as permanently public.
 
+### Rehearsal result (2026-11-18, local only, nothing pushed)
+
+- Backup first: `C:\Users\Dhanu\GlaxMiner-backups\20261118-020827-pre-history-cleanup\repo-all-refs.bundle` (`git bundle verify`: okay; all 4 branches and `origin/main`), plus `refs-before.txt`.
+- GitHub has one ref: `main` = `92c29f4`. The other branches exist only locally.
+- On a disposable mirror of the local repo, `git filter-repo --invert-paths --path server/.env --path bot/.env` rewrote 3 commits that touched the files.
+- Afterwards: 0 commits touch either file; a scan of every commit for Railway Postgres URLs and bot-token patterns finds 0 matches (the same scan on the original finds both files, so the scan works).
+- Every branch keeps its commit count (main 26, security/phase-0-v2 31, security/phase-0 33, wip/economy-and-deposits 33) and has no file differences except the two removed `.env` files. `server/config/mining.js` is byte-identical.
+- `92c29f4` would become `fdccaf8`. Re-run the rewrite right before the push so it includes the latest commits.
+
+To push the cleaned history, rewrite a fresh mirror of the **local** repo (so the local-only branches are cleaned too), then push `main` and any branches you want on GitHub with `--force`. This needs your approval after rotation.
+
 ---
 
 ## 9. Tests
@@ -199,4 +212,4 @@ cd server
 npm test
 ```
 
-43 tests against the real Express app on an embedded PostgreSQL 17. They cover: the economy (config byte-identical to 92c29f4, every reward and cost, no 8 h / 5 GLX left), 401 on every route, forged/tampered/expired initData, body `telegramId` ignored, 403 on other users, `addBalance` gone, the 5 h rule to the second, all 10 level rewards, 50 parallel claims paying once, 20 parallel starts, parallel upgrades never double-spending, preserved rows on boot, a read-only preflight, a NUMERIC balance column, rate limiting and CORS.
+55 tests (5 consecutive green runs) against the real Express app on an embedded PostgreSQL 17. They cover: the economy (config byte-identical to 92c29f4, every reward and cost, no 8 h / 5 GLX left), 401 on every route, forged/tampered/expired initData, body `telegramId` ignored, 403 on other users, `addBalance` gone, the 5 h rule to the second, all 10 level rewards, 50 parallel claims paying once, 20 parallel starts, parallel upgrades never double-spending, preserved rows on boot, a read-only preflight, a NUMERIC balance column, rate limiting and CORS (default and configured), 50 concurrent sync/status calls during a finished session, every deposit path returning 503 with a tx hash replayed across endpoints and users crediting nothing, and every frontend API path existing on the server.
