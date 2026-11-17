@@ -37,7 +37,7 @@ export function GameProvider({ children }) {
       setGameLoading(true);
 
       try {
-        const data = await loadUser(user.telegram_id);
+        const data = await loadUser();
 
         if (cancelled) return;
 

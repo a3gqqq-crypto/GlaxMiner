@@ -1,223 +1,140 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useGame } from "../context/GameContext";
 import {
   startMining as startMiningApi,
-  syncMining,
+  getMiningStatus,
+  claimMining,
 } from "../api/miningApi";
-import { loadUser } from "../api/userApi";
 
-// ==========================================
-// MINING SETTINGS
-// ==========================================
+// The server owns the session: duration, reward and whether a claim is
+// allowed all come from /mine/status. The countdown below is display only.
 
-const MINING_DURATION = 8 * 60 * 60;
-
-// 5 GLX per 8 hours
-const REWARD_PER_CYCLE = 5;
-
-// 15 GLX maximum per 24 hours
-const DAILY_LIMIT = 15;
+const STATUS_REFRESH_MS = 30_000;
 
 export default function useMining() {
   const { user } = useAuth();
   const { game, setGame } = useGame();
 
+  const [status, setStatus] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [miningReward, setMiningReward] = useState(0);
+  const [busy, setBusy] = useState(false);
+  // server clock minus device clock, so a wrong phone clock can't skew the timer
+  const clockOffset = useRef(0);
 
-  // ==========================================
-  // MINING TIMER
-  // ==========================================
+  const applyStatus = useCallback(
+    (data) => {
+      if (!data?.success) return;
 
-  useEffect(() => {
-    if (!game.mining || !game.miningStart) {
-      setTimeLeft(0);
-      setMiningReward(0);
-      return;
-    }
-
-    let syncing = false;
-
-    const updateMining = async () => {
-      const elapsed = Math.floor(
-        (Date.now() - Number(game.miningStart)) / 1000
-      );
-
-      const remaining = Math.max(
-        0,
-        MINING_DURATION - elapsed
-      );
-
-      setTimeLeft(remaining);
-
-      if (!user || syncing) {
-        return;
-      }
-
-      syncing = true;
-
-      try {
-        const data = await syncMining(
-          user.telegram_id
-        );
-
-        if (data.success) {
-
-          // Update balance immediately
-          if (data.balance !== undefined) {
-            setGame((prev) => ({
-              ...prev,
-              balance: Number(data.balance),
-            }));
-          }
-
-          // Show how much was just earned
-          if (data.totalEarned !== undefined) {
-            setMiningReward(
-              Number(data.totalEarned)
-            );
-          }
-
-          // 8 hours finished
-          if (data.finished) {
-            const refreshed = await loadUser(
-              user.telegram_id
-            );
-
-            if (refreshed.success) {
-              setGame((prev) => ({
-                ...prev,
-
-                balance:
-                  Number(refreshed.user.balance),
-
-                pickaxeLevel:
-                  refreshed.user.pickaxe_level,
-
-                mining:
-                  false,
-
-                miningStart:
-                  0,
-
-                canClaim:
-                  false,
-              }));
-            }
-
-            setTimeLeft(0);
-            setMiningReward(0);
-          }
-        }
-
-      } catch (err) {
-        console.error(
-          "Mining sync error:",
-          err
-        );
-      }
-
-      syncing = false;
-    };
-
-    // Run immediately
-    updateMining();
-
-    // Then sync every second
-    const interval = setInterval(
-      updateMining,
-      1000
-    );
-
-    return () => {
-      clearInterval(interval);
-    };
-
-  }, [
-    game.mining,
-    game.miningStart,
-    user,
-    setGame,
-  ]);
-
-  // ==========================================
-  // START MINING
-  // ==========================================
-
-  async function start() {
-    if (!user) return;
-
-    try {
-      const data = await startMiningApi(
-        user.telegram_id
-      );
-
-      if (!data.success) {
-        alert(data.message);
-        return;
-      }
+      clockOffset.current = Number(data.serverTime) - Date.now();
+      setStatus(data);
 
       setGame((prev) => ({
         ...prev,
-
-        mining: true,
-
-        miningStart:
-          data.startTime,
-
-        canClaim: false,
+        balance: Number(data.balance),
+        pickaxeLevel: data.pickaxeLevel,
+        mining: data.mining,
+        miningStart: data.mining ? data.startTime : 0,
+        canClaim: data.canClaim,
       }));
+    },
+    [setGame]
+  );
 
-      setTimeLeft(
-        MINING_DURATION
-      );
-
-      setMiningReward(0);
-
+  const refresh = useCallback(async () => {
+    if (!user) return;
+    try {
+      applyStatus(await getMiningStatus());
     } catch (err) {
-      console.error(
-        "Start mining error:",
-        err
-      );
+      console.error("Mining status error:", err);
+    }
+  }, [user, applyStatus]);
 
-      alert(
-        "Could not start mining."
-      );
+  // Load status on login, then refresh occasionally while mining
+  useEffect(() => {
+    if (!user) return;
+    refresh();
+  }, [user, refresh]);
+
+  useEffect(() => {
+    if (!user || !game.mining) return;
+    const id = setInterval(refresh, STATUS_REFRESH_MS);
+    return () => clearInterval(id);
+  }, [user, game.mining, refresh]);
+
+  // Local countdown (display only)
+  const duration = status?.duration ?? 0;
+
+  useEffect(() => {
+    if (!game.mining || !game.miningStart || !duration) {
+      setTimeLeft(0);
+      return;
+    }
+
+    const tick = () => {
+      const now = Date.now() + clockOffset.current;
+      const elapsed = Math.floor((now - Number(game.miningStart)) / 1000);
+      setTimeLeft(Math.max(0, duration - elapsed));
+    };
+
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [game.mining, game.miningStart, duration]);
+
+  async function start() {
+    if (!user || busy) return;
+    setBusy(true);
+
+    try {
+      const data = await startMiningApi();
+
+      if (!data.success) {
+        alert(data.message);
+      }
+
+      await refresh();
+    } catch (err) {
+      console.error("Start mining error:", err);
+      alert("Could not start mining.");
+    } finally {
+      setBusy(false);
     }
   }
 
-  // ==========================================
-  // RETURN
-  // ==========================================
+  async function claim() {
+    if (!user || busy) return;
+    setBusy(true);
+
+    try {
+      const data = await claimMining();
+
+      if (!data.success) {
+        alert(data.message);
+      }
+
+      await refresh();
+    } catch (err) {
+      console.error("Claim error:", err);
+      alert("Could not claim the reward.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const finished = game.mining && duration > 0 && timeLeft === 0;
 
   return {
-    balance:
-      Number(game.balance ?? 0),
-
-    mining:
-      game.mining,
-
+    balance: Number(game.balance ?? 0),
+    mining: game.mining,
     timeLeft,
-
-    // No claim anymore
-    canClaim: false,
-
-    miningReward,
-
-    miningDuration:
-      MINING_DURATION,
-
-    rewardPerCycle:
-      REWARD_PER_CYCLE,
-
-    dailyLimit:
-      DAILY_LIMIT,
-
-    startMining:
-      start,
-
-    // Kept for compatibility
-    claimReward: () => {},
+    canClaim: finished || Boolean(status?.canClaim && game.mining),
+    busy,
+    miningDuration: duration,
+    rewardPerCycle: status?.reward ?? null,
+    pickaxeLevel: game.pickaxeLevel,
+    startMining: start,
+    claimReward: claim,
+    refreshStatus: refresh,
   };
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import BottomNav from "../components/BottomNav";
+import { loadLeaderboard } from "../api/userApi";
 import "../styles/Leaderboard.css";
 
 
@@ -10,8 +11,7 @@ function Leaderboard({ page, setPage }) {
 
   useEffect(() => {
 
-    fetch("http://localhost:5000/api/users/leaderboard")
-      .then(res => res.json())
+    loadLeaderboard()
       .then(data => {
 
         setUsers(data.users || []);

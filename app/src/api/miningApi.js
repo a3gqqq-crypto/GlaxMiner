@@ -1,55 +1,25 @@
-import API from "./api";
+import { apiFetch } from "./api";
 
 // ==========================================
 // START MINING
 // ==========================================
 
-export async function startMining(telegramId) {
-  const res = await fetch(`${API}/mine/start`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      telegramId,
-    }),
-  });
-
-  return res.json();
+export function startMining() {
+  return apiFetch("/mine/start", { method: "POST" });
 }
 
 // ==========================================
-// SYNC MINING
+// MINING STATUS (read-only; replaces /mine/sync)
 // ==========================================
 
-export async function syncMining(telegramId) {
-  const res = await fetch(`${API}/mine/sync`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      telegramId,
-    }),
-  });
-
-  return res.json();
+export function getMiningStatus() {
+  return apiFetch("/mine/status");
 }
 
 // ==========================================
-// CLAIM
+// CLAIM (only after the full session)
 // ==========================================
 
-export async function claimMining(telegramId) {
-  const res = await fetch(`${API}/mine/claim`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      telegramId,
-    }),
-  });
-
-  return res.json();
+export function claimMining() {
+  return apiFetch("/mine/claim", { method: "POST" });
 }

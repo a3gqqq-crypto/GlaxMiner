@@ -1,35 +1,29 @@
 import "../styles/ProgressBar.css";
 import { useMiningContext } from "../context/MiningContext";
 
-const MINING_DURATION = 8 * 60 * 60;
-
 function ProgressBar() {
   const {
     mining,
     timeLeft,
     canClaim,
+    miningDuration,
   } = useMiningContext();
 
   // Don't show before mining starts
-  if (!mining && !canClaim) {
+  if (!mining || !miningDuration) {
     return null;
   }
 
-  let progress = 0;
+  let progress = ((miningDuration - timeLeft) / miningDuration) * 100;
+  progress = Math.max(0, Math.min(100, progress));
 
-  // Mining is running
-  if (mining) {
-    const elapsed = MINING_DURATION - timeLeft;
-
-    progress = (elapsed / MINING_DURATION) * 100;
-
-    progress = Math.max(0, Math.min(100, progress));
-  }
-
-  // Finished
-  if (!mining && canClaim) {
+  if (canClaim) {
     progress = 100;
   }
+
+  // One label per hour of the server's session length (5 h -> 0h..5h)
+  const hours = Math.round(miningDuration / 3600);
+  const labels = Array.from({ length: hours + 1 }, (_, i) => `${i}h`);
 
   return (
     <div className="progress-card">
@@ -48,13 +42,13 @@ function ProgressBar() {
 
         <div
           className={`progress-fill ${
-            mining ? "is-mining" : "is-finished"
+            canClaim ? "is-finished" : "is-mining"
           }`}
           style={{
             width: `${progress}%`,
           }}
         >
-          {mining && (
+          {!canClaim && (
             <div className="progress-shine" />
           )}
         </div>
@@ -62,11 +56,9 @@ function ProgressBar() {
       </div>
 
       <div className="progress-labels">
-        <span>0h</span>
-        <span>2h</span>
-        <span>4h</span>
-        <span>6h</span>
-        <span>8h</span>
+        {labels.map((label) => (
+          <span key={label}>{label}</span>
+        ))}
       </div>
 
     </div>

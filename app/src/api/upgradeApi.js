@@ -1,15 +1,5 @@
-import API from "./api";
+import { apiFetch } from "./api";
 
-export async function upgradePickaxe(telegramId) {
-  const res = await fetch(`${API}/upgrade/pickaxe`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      telegramId,
-    }),
-  });
-
-  return res.json();
+export function upgradePickaxe() {
+  return apiFetch("/upgrade/pickaxe", { method: "POST" });
 }

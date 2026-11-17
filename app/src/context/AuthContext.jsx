@@ -1,31 +1,45 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { login } from "../api/userApi";
+import { getInitData } from "../api/api";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  // null | "not_in_telegram" | "login_failed"
+  const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
     async function init() {
+      const webApp = window.Telegram?.WebApp;
+
       try {
-        let telegramId = 1;
-        let username = "Developer";
+        webApp?.ready?.();
+        webApp?.expand?.();
+      } catch {
+        // older Telegram clients
+      }
 
-        if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
-          telegramId = window.Telegram.WebApp.initDataUnsafe.user.id;
-          username =
-            window.Telegram.WebApp.initDataUnsafe.user.username || "";
-        }
+      // No fallback test account: without signed initData the server
+      // cannot identify the player.
+      if (!getInitData()) {
+        setAuthError("not_in_telegram");
+        setLoading(false);
+        return;
+      }
 
-        const data = await login(telegramId, username);
+      try {
+        const data = await login();
 
         if (data.success) {
           setUser(data.user);
+        } else {
+          setAuthError("login_failed");
         }
       } catch (err) {
         console.error(err);
+        setAuthError("login_failed");
       }
 
       setLoading(false);
@@ -40,6 +54,7 @@ export function AuthProvider({ children }) {
         user,
         setUser,
         loading,
+        authError,
       }}
     >
       {children}

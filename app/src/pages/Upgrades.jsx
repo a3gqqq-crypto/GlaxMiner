@@ -39,7 +39,7 @@ function Upgrades({ page, setPage }) {
     if (!user) return;
 
 
-    const result = await upgradePickaxe(user.telegram_id);
+    const result = await upgradePickaxe();
 
 
 
@@ -53,7 +53,7 @@ function Upgrades({ page, setPage }) {
 
 
 
-    const refreshed = await loadUser(user.telegram_id);
+    const refreshed = await loadUser();
 
 
 
