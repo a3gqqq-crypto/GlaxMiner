@@ -8,7 +8,9 @@
     "start": "node index.js",
     "dev": "node index.js",
     "test": "node --test --test-concurrency=1 \"test/**/*.test.js\"",
-    "preflight": "node scripts/preflight-check.js"
+    "preflight": "node scripts/preflight-check.js",
+    "backup": "node scripts/backup-verify.js backup",
+    "backup:verify": "node scripts/backup-verify.js verify"
   },
   "keywords": [],
   "author": "",

@@ -104,6 +104,19 @@ pg_restore --list glaxminer-before-phase0.dump | head
 
 Keep the dump outside the repository.
 
+**Plus a verified logical backup (no PostgreSQL client tools needed).** With `DATABASE_URL` set to the current public URL in your shell (never in a file in the repo):
+
+```bash
+cd server
+npm run backup -- C:/Users/Dhanu/GlaxMiner-backups/prod-before-phase0
+```
+
+```bash
+npm run backup:verify -- C:/Users/Dhanu/GlaxMiner-backups/prod-before-phase0
+```
+
+The first command reads one consistent, read-only snapshot and writes `schema.json`, one `.ndjson` file per table and `manifest.json` (row counts, md5 checksums, balance totals). The second restores everything into a throwaway local Postgres and fails unless every count and checksum matches; it writes `restore-verification.json`. The tool refuses to write inside the repository and never prints the URL. It is tested against both this branch's schema and the WIP schema (`users` with NUMERIC balances, `usdt_deposits`, `wallet_transactions`, partial unique indexes).
+
 ---
 
 ## 6. Secret rotation (treat both as compromised)
