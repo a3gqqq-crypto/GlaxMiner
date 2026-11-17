@@ -2,48 +2,39 @@ const express = require("express");
 const router = express.Router();
 
 const pool = require("../config/database");
+const { requireSelf } = require("../middleware/telegramAuth");
+
+// Every route here runs behind requireTelegramAuth (see app.js):
+// req.telegramId comes ONLY from verified Telegram initData.
 
 // ===========================
 // Login / Create User
 // ===========================
 router.post("/login", async (req, res) => {
   try {
-    const { telegramId, username } = req.body;
+    const telegramId = req.telegramId;
+    const username = req.telegramUser?.username || "";
 
-    if (!telegramId) {
-      return res.status(400).json({
-        success: false,
-        message: "Telegram ID is required",
-      });
-    }
+    // Same behaviour as before: create the user if new, never modify an
+    // existing row. ON CONFLICT makes concurrent first logins safe.
+    await pool.query(
+      `
+      INSERT INTO users (telegram_id, username)
+      VALUES ($1, $2)
+      ON CONFLICT (telegram_id) DO NOTHING
+      `,
+      [telegramId, username]
+    );
 
-    const existing = await pool.query(
+    const result = await pool.query(
       "SELECT * FROM users WHERE telegram_id = $1",
       [telegramId]
     );
 
-    if (existing.rows.length > 0) {
-      return res.json({
-        success: true,
-        user: existing.rows[0],
-      });
-    }
-
-    const created = await pool.query(
-      `
-      INSERT INTO users
-      (telegram_id, username)
-      VALUES ($1, $2)
-      RETURNING *
-      `,
-      [telegramId, username || ""]
-    );
-
     res.json({
       success: true,
-      user: created.rows[0],
+      user: result.rows[0],
     });
-
   } catch (err) {
     console.error(err);
 
@@ -55,35 +46,31 @@ router.post("/login", async (req, res) => {
 });
 
 // ===========================
-// Add Balance (DEV)
+// Add Balance (DEV): REMOVED
 // ===========================
-router.post("/addBalance", async (req, res) => {
+// POST /user/addBalance let any caller credit any amount to any account.
+// Balances now change only through /mine/claim and /upgrade/pickaxe.
+
+// ===========================
+// Leaderboard
+// ===========================
+// The frontend called a leaderboard route that did not exist on the
+// deployed server. Read-only: display name, balance and level only.
+router.get("/leaderboard", async (req, res) => {
   try {
-    const { telegramId, amount } = req.body;
-
-    await pool.query(
-      `
-      UPDATE users
-      SET balance = balance + $1
-      WHERE telegram_id = $2
-      `,
-      [amount, telegramId]
-    );
-
     const result = await pool.query(
       `
-      SELECT *
+      SELECT username, balance, pickaxe_level
       FROM users
-      WHERE telegram_id = $1
-      `,
-      [telegramId]
+      ORDER BY balance DESC NULLS LAST, id ASC
+      LIMIT 50
+      `
     );
 
     res.json({
       success: true,
-      user: result.rows[0],
+      users: result.rows,
     });
-
   } catch (err) {
     console.error(err);
 
@@ -94,16 +81,11 @@ router.post("/addBalance", async (req, res) => {
   }
 });
 
-// ===========================
-// Get User
-// ===========================
-router.get("/:telegramId", async (req, res) => {
+async function sendOwnUser(req, res) {
   try {
-    const { telegramId } = req.params;
-
     const result = await pool.query(
       "SELECT * FROM users WHERE telegram_id = $1",
-      [telegramId]
+      [req.telegramId]
     );
 
     if (result.rows.length === 0) {
@@ -117,7 +99,6 @@ router.get("/:telegramId", async (req, res) => {
       success: true,
       user: result.rows[0],
     });
-
   } catch (err) {
     console.error(err);
 
@@ -126,6 +107,16 @@ router.get("/:telegramId", async (req, res) => {
       message: "Database error",
     });
   }
-});
+}
+
+// ===========================
+// Get Current User
+// ===========================
+router.get("/me", sendOwnUser);
+
+// ===========================
+// Get User (own record only)
+// ===========================
+router.get("/:telegramId", requireSelf("telegramId"), sendOwnUser);
 
 module.exports = router;
