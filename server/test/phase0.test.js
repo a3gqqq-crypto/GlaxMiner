@@ -428,6 +428,20 @@ describe("deposits are disabled", () => {
 
 // ------------------------------------------------------------------
 describe("frontend and server routes match", () => {
+  it("the live session counter derives its rate from the server reward, never a constant", () => {
+    const src = fs.readFileSync(path.join(__dirname, "..", "..", "app", "src", "ui", "LiveCounter.jsx"), "utf8");
+    assert.match(src, /reward \/ duration/);
+    assert.match(src, /serverNow\(\) - start/);
+    assert.doesNotMatch(src, /0\.0001/);
+    let all = "";
+    try {
+      all = execFileSync("git", ["grep", "-l", "-F", "0.0001", "--", "app/src", ":!app/src/game/sound.js"], { cwd: path.join(__dirname, "..", ".."), encoding: "utf8" }).trim();
+    } catch {
+      all = ""; // git grep exits 1 when nothing matches (sound.js uses 0.0001 as an audio gain floor)
+    }
+    assert.equal(all, "", "no hard-coded per-second rate anywhere in the app");
+  });
+
   it("every apiFetch path in app/src/api exists on the server", async () => {
     const dir = path.join(__dirname, "..", "..", "app", "src", "api");
     const calls = [];

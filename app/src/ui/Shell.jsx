@@ -5,11 +5,12 @@ import { tierInfo } from "../data/economy";
 import { glx } from "../lib/format";
 import { FacetMark } from "../art/Facet";
 import { Avatar } from "./kit";
+import PickaxeIcon from "../game/PickaxeIcon";
 import { IconOutpost, IconLab, IconContracts, IconRanks, IconVault } from "./icons";
 
 export const TABS = [
   { id: "outpost", label: "Outpost", Icon: IconOutpost },
-  { id: "lab", label: "Lab", Icon: IconLab },
+  { id: "lab", label: "Forge", Icon: IconLab },
   { id: "contracts", label: "Contracts", Icon: IconContracts },
   { id: "ranks", label: "Ranks", Icon: IconRanks },
   { id: "vault", label: "Vault", Icon: IconVault },
@@ -56,7 +57,7 @@ export function TopBar({ onProfile }) {
         <span className="topbar__who">
           <span className="topbar__name">{name}</span>
           <span className="topbar__rank">
-            Rig {rig.level} · {rig.name}
+            <PickaxeIcon tier={rig.level} size={16} /> Tier {rig.level} · {rig.name}
           </span>
         </span>
       </button>

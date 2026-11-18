@@ -5,6 +5,7 @@ import { Avatar, Card, Chip, PlannedBadge, ScreenHeader } from "../ui/kit";
 import { IconCrown, IconRefresh } from "../ui/icons";
 import { glx } from "../lib/format";
 import { RIG_NAMES } from "../data/economy";
+import PickaxeIcon from "../game/PickaxeIcon";
 import { telegramUser } from "../lib/telegram";
 
 function display(row, i) {
@@ -89,6 +90,7 @@ export default function Ranks() {
                       <Avatar name={display(r, idx)} size={idx === 0 ? 56 : 46} />
                       <div className="podium__name">{display(r, idx)}</div>
                       <div className="podium__bal">{glx(r.balance)}</div>
+                      <PickaxeIcon tier={r.pickaxe_level} size={26} />
                       <div className="podium__base">
                         <span>{idx + 1}</span>
                       </div>
@@ -106,8 +108,9 @@ export default function Ranks() {
                       <Avatar name={display(r, idx)} size={32} />
                       <span className="board__who">
                         <span className="board__name">{display(r, idx)}{idx === myIndex && <Chip tone="glaxite">You</Chip>}</span>
-                        <span className="board__rig">Rig {r.pickaxe_level} · {RIG_NAMES[r.pickaxe_level] || ""}</span>
+                        <span className="board__rig">Tier {r.pickaxe_level} · {RIG_NAMES[r.pickaxe_level] || ""}</span>
                       </span>
+                      <PickaxeIcon tier={r.pickaxe_level} size={28} />
                       <span className="board__bal">{glx(r.balance)}</span>
                     </li>
                   );

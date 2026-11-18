@@ -30,19 +30,25 @@ export function GameProvider({ children }) {
     toastTimer.current = setTimeout(() => setToast(null), 3600);
   }, []);
 
-  const applyStatus = useCallback((data) => {
+  // Server clock sync: serverTime is taken mid-request, so compare it with
+  // the midpoint of our request (halves the network-latency error).
+  const applyStatus = useCallback((data, sentAt) => {
     if (!data?.success) return false;
     if (Number.isFinite(Number(data.serverTime))) {
-      offset.current = Number(data.serverTime) - Date.now();
+      const mid = sentAt ? (sentAt + Date.now()) / 2 : Date.now();
+      offset.current = Number(data.serverTime) - mid;
     }
     setStatus(data);
     return true;
   }, []);
 
+  const serverNow = useCallback(() => Date.now() + offset.current, []);
+
   const refresh = useCallback(async () => {
     try {
+      const sentAt = Date.now();
       const data = await getMiningStatus();
-      applyStatus(data);
+      applyStatus(data, sentAt);
       return data;
     } catch (e) {
       if (e instanceof ApiError) notify(e.message, "error");
@@ -70,12 +76,14 @@ export function GameProvider({ children }) {
         setPhase("error");
         return;
       }
+      let sentAt = Date.now();
       let st = await getMiningStatus();
       if (!st.success && st.status === 429) {
         await new Promise((r) => setTimeout(r, 1500));
+        sentAt = Date.now();
         st = await getMiningStatus();
       }
-      if (!applyStatus(st)) {
+      if (!applyStatus(st, sentAt)) {
         setPhase("error");
         return;
       }
@@ -210,6 +218,7 @@ export function GameProvider({ children }) {
     balance: Number(status?.balance ?? profile?.balance ?? 0),
     level: Number(status?.pickaxeLevel ?? profile?.pickaxe_level ?? 1),
     session,
+    serverNow,
     busy,
     start,
     claim,

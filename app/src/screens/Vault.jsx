@@ -4,9 +4,10 @@ import { Card, Chip, PlannedBadge, ScreenHeader, SectionTitle, Ticker } from "..
 import { IconDown, IconLock, IconShield, IconArrowUp } from "../ui/icons";
 import { glx } from "../lib/format";
 import { tierInfo } from "../data/economy";
+import { PendingValue } from "../ui/LiveCounter";
 
 export default function Vault() {
-  const { balance, level, session } = useGame();
+  const { balance, level, session, serverNow } = useGame();
   const rig = tierInfo(level);
   const pending = session.state !== "idle" ? session.reward ?? rig.reward : 0;
 
@@ -29,10 +30,12 @@ export default function Vault() {
             <strong>{glx(balance)}</strong>
           </div>
           <div>
-            <span>{session.state === "ready" ? "Ready to claim" : "In current session"}</span>
-            <strong className={session.state === "ready" ? "tone-reward" : session.state === "mining" ? "tone-live" : ""}>
-              {pending ? `+${glx(pending)}` : "—"}
-            </strong>
+            <span>{session.state === "ready" ? "Ready to claim" : session.state === "mining" ? "Pending this session" : "No active session"}</span>
+            {pending ? (
+              <PendingValue start={session.start} duration={session.duration} reward={pending} serverNow={serverNow} ready={session.state === "ready"} className={session.state === "ready" ? "tone-reward" : "tone-live"} />
+            ) : (
+              <strong>—</strong>
+            )}
           </div>
         </div>
       </Card>
@@ -60,7 +63,7 @@ export default function Vault() {
           A full record of every session, upgrade and contract is being built on the server. Until it's live, your balance above is the only figure we show, so nothing here is guessed.
         </p>
         <ul className="ledger__ghost" aria-hidden="true">
-          {["Mining session", "Rig upgrade", "Mining session"].map((t, i) => (
+          {["Mining session", "Pickaxe forge", "Mining session"].map((t, i) => (
             <li key={i}>
               <span className={`ledger__dot ledger__dot--${i === 1 ? "glaxite" : "live"}`} />
               <span className="ledger__t">{t}</span>
@@ -73,8 +76,8 @@ export default function Vault() {
       <Card className="vault-facts">
         <SectionTitle>How GLX moves</SectionTitle>
         <ul className="facts">
-          <li><Chip tone="live">Earn</Chip><span>Claim a completed 5-hour session: {glx(rig.reward)} GLX at your current rig.</span></li>
-          <li><Chip tone="glaxite">Spend</Chip><span>Upgrade your rig in the Lab. The server deducts the exact listed price.</span></li>
+          <li><Chip tone="live">Earn</Chip><span>Claim a completed 5-hour session: {glx(rig.reward)} GLX with your current pickaxe.</span></li>
+          <li><Chip tone="glaxite">Spend</Chip><span>Forge a better pickaxe in the Workshop. The server deducts the exact listed price.</span></li>
           <li><Chip tone="neutral">Off</Chip><span>No deposits, withdrawals, purchases or payouts.</span></li>
         </ul>
       </Card>
