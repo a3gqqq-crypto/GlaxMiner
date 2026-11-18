@@ -4,8 +4,8 @@ Legend: **COMPLETED** done · **VERIFIED** done and checked · **PREPARED** read
 
 | # | Item | Status | Detail |
 |---|---|---|---|
-| 1 | Railway project and services | **BLOCKED** | The built-in browser is not signed in to Railway (the project URL shows the logged-out 404). No Railway CLI or token on this machine. Public evidence only: last API deploy `92c29f4` on 2026-08-08, inactive since 2026-09-04, URL answers "Application not found" |
-| 2 | Original PostgreSQL database exists? | **BLOCKED / unknown** | The public proxy resets connections before the Postgres handshake (re-checked 2026-11-18). Cannot tell deleted from paused without the dashboard |
+| 1 | Railway project and services | **VERIFIED (dashboard, 2026-11-18)** | Project "disciplined-flow" exists, environment "production". The account shows **"Trial expired" / "Limited Access: select a plan to continue"**. Services: **Postgres** (offline, all deployments REMOVED, `postgres-volume` still attached, US West, unexposed) and **GlaxMiner** API (offline, no active deployment; newest deploy "Update mining system and progress bar" = `92c29f4`, via GitHub; no CLI deploys). Postgres was auto-updated to `postgres-ssl:18` about 2 months ago |
+| 2 | Original PostgreSQL database exists? | **Volume exists; data not yet readable** | `postgres-volume` is still attached. The database process is stopped because the trial expired, so its contents can't be read. **No Railway backups exist** ("This service's volume does not have any backups"); creating backups requires a paid plan |
 | 3 | Backup and restore proof | **PREPARED** | No production backup exists. `npm run backup` / `npm run backup:verify` are built and VERIFIED locally on both possible schemas (counts, md5 checksums, balance totals match after restore into a fresh Postgres) |
 | 4 | User count and balance totals | **BLOCKED** | Needs database access |
 | 5 | Database password rotation | **BLOCKED** | Needs the backup first, and Railway access. Steps: `PHASE0.md` section 6a |
@@ -21,7 +21,7 @@ Legend: **COMPLETED** done · **VERIFIED** done and checked · **PREPARED** read
 
 ## What you need to do to unblock
 
-1. Sign in to Railway in the Claude app's browser pane (it is open on railway.com/login) — or tell me what the dashboard shows for project `88d97f95-…`: API service, Postgres service, volume, backups, billing.
-2. If Postgres exists: take a Railway backup, or let me run `npm run backup` + `npm run backup:verify` with the current `DATABASE_PUBLIC_URL` set in the shell environment.
+1. **Choose a Railway plan** (the trial expired; this is a purchase only you can make). Do it soon: the volume still exists, but an inactive trial project is at risk of cleanup.
+2. Redeploy **only the Postgres** service first (do not deploy the API yet). Then take a Railway backup (needs a paid plan), and let me run `npm run backup` + `npm run backup:verify` with the current `DATABASE_PUBLIC_URL` set in the shell environment.
 3. Rotate the bot token in BotFather yourself, and put it in Railway (API + bot) yourself.
 4. Approve the deploy once 1 to 3 are done; approve the history force-push after rotation.
