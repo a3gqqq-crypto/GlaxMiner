@@ -1,0 +1,61 @@
+/* GlaxMiner design tokens: "The Glax Belt".
+   Instrument-grade dark surfaces, one living light.
+   - glaxite (violet): brand, selection, primary actions
+   - signal (cyan): ONLY for things that are live right now (an active session)
+   - reward (amber): ONLY for things that can be claimed
+*/
+:root {
+  --bg: #0b0b0f;
+  --bg-deep: #07070a;
+  --surface-1: #14141b;
+  --surface-2: #1c1c26;
+  --surface-3: #262633;
+  --line: #2e2e3d;
+  --line-soft: #22222d;
+
+  --text: #f2f1f7;
+  --text-2: #a9a7ba;
+  --text-3: #8a889d; /* 4.9:1 on surface-1 */
+
+  --glaxite-700: #4b2ea3;
+  --glaxite-600: #6a42d9;
+  --glaxite-500: #8b5cf6;
+  --glaxite-400: #9b74ff;
+  --glaxite-300: #b9a2ff;
+  --glaxite-100: #e9e1ff;
+  --glaxite-tint: #2a1c52;
+
+  --signal: #3dd6f5;
+  --signal-tint: #0e2a31;
+  --reward: #f5b544;
+  --reward-ink: #1a1206;
+  --reward-tint: #3a2a0e;
+  --ok: #3ddc97;
+  --ok-tint: #12352a;
+  --error: #f26d6d;
+  --error-tint: #3a1618;
+
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Unbounded", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+
+  --fast: 120ms;
+  --base: 200ms;
+  --slow: 320ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-lock: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Telegram provides --tg-safe-area-inset-* and --tg-content-safe-area-inset-*
+     on newer clients; fall back to the browser's env() values. */
+  --safe-top: max(var(--tg-safe-area-inset-top, 0px), env(safe-area-inset-top, 0px));
+  --safe-bottom: max(var(--tg-safe-area-inset-bottom, 0px), env(safe-area-inset-bottom, 0px));
+  --content-top: var(--tg-content-safe-area-inset-top, 0px);
+
+  --tabbar-h: 68px;
+  --app-max: 460px;
+}

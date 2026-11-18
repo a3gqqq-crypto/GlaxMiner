@@ -92,7 +92,7 @@ describe("economy is the original 92c29f4 configuration", () => {
 
   it("the frontend's displayed table matches the server", () => {
     const src = fs.readFileSync(
-      path.join(__dirname, "..", "..", "app", "src", "data", "config.js"),
+      path.join(__dirname, "..", "..", "app", "src", "data", "economy.js"),
       "utf8"
     );
     assert.match(src, /MINING_DURATION = 5 \* 60 \* 60/);
@@ -454,8 +454,9 @@ describe("frontend and server routes match", () => {
     })
       .split("\n")
       .filter((f) => /\.(js|jsx)$/.test(f));
-    const live = files.filter((f) => /app\/src\/(api|context|pages|components|hooks)\//.test(f) || /App\.jsx$|main\.jsx$/.test(f));
-    for (const f of live) {
+    // every source file in the shipped app, whatever folder it lives in
+    assert.ok(files.length >= 15, `found ${files.length} app files`);
+    for (const f of files) {
       const text = fs.readFileSync(path.join(root, "..", "..", f), "utf8");
       assert.doesNotMatch(text, /localhost:\d+/, f);
       assert.doesNotMatch(text, /addBalance/, f);

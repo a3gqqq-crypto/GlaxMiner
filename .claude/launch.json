@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "glaxminer-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "app", "run", "dev", "--", "--port", "5173", "--strictPort", "--host", "localhost"],
+      "port": 5173
+    }
+  ]
+}

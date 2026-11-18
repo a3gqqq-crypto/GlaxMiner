@@ -1,20 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import "./index.css";
+import { GameProvider } from "./state/GameProvider";
+import { initTelegram } from "./lib/telegram";
+import "./styles/tokens.css";
+import "./styles/app.css";
 
-import { AuthProvider } from "./context/AuthContext";
-import { GameProvider } from "./context/GameContext";
-import { MiningProvider } from "./context/MiningContext";
+initTelegram();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <GameProvider>
-        <MiningProvider>
-          <App />
-        </MiningProvider>
-      </GameProvider>
-    </AuthProvider>
+    <GameProvider>
+      <App />
+    </GameProvider>
   </React.StrictMode>
 );
