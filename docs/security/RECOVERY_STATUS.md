@@ -1,27 +1,31 @@
-# GlaxMiner Phase 0 recovery status, 2026-11-18
+# GlaxMiner Phase 0 recovery status (updated 2026-11-18)
 
 Legend: **COMPLETED** done · **VERIFIED** done and checked · **PREPARED** ready, waiting for access or approval · **BLOCKED** cannot proceed without you.
 
 | # | Item | Status | Detail |
 |---|---|---|---|
-| 1 | Railway project and services | **VERIFIED (dashboard, 2026-11-18)** | Project "disciplined-flow" exists, environment "production". The account shows **"Trial expired" / "Limited Access: select a plan to continue"**. Services: **Postgres** (offline, all deployments REMOVED, `postgres-volume` still attached, US West, unexposed) and **GlaxMiner** API (offline, no active deployment; newest deploy "Update mining system and progress bar" = `92c29f4`, via GitHub; no CLI deploys). Postgres was auto-updated to `postgres-ssl:18` about 2 months ago |
-| 2 | Original PostgreSQL database exists? | **Volume exists; data not yet readable** | `postgres-volume` is still attached. The database process is stopped because the trial expired, so its contents can't be read. **No Railway backups exist** ("This service's volume does not have any backups"); creating backups requires a paid plan |
-| 3 | Backup and restore proof | **PREPARED** | No production backup exists. `npm run backup` / `npm run backup:verify` are built and VERIFIED locally on both possible schemas (counts, md5 checksums, balance totals match after restore into a fresh Postgres) |
-| 4 | User count and balance totals | **BLOCKED** | Needs database access |
-| 5 | Database password rotation | **BLOCKED** | Needs the backup first, and Railway access. Steps: `PHASE0.md` section 6a |
-| 6 | Bot token rotation | **BLOCKED** | Needs your Telegram account (BotFather). Consumers of the token: the bot process (`bot/index.js`) and, from this release, the API (`BOT_TOKEN`). Steps: section 6b |
+| 1 | Railway project and services | **VERIFIED** | Project "disciplined-flow", environment "production". Trial had expired; workspace **downgraded to the Free plan** ($0, $1 monthly usage credit, 1 vCPU / 0.5 GB RAM per service, 0.5 GB volume). No payment details entered. **Postgres** redeployed (same image `postgres-ssl:18`, same `postgres-volume`, US West, still unexposed). **GlaxMiner API** left offline. Newest API deploy ever: `92c29f4` via GitHub |
+| 2 | Original PostgreSQL database | **VERIFIED: exists, data intact** | Before the downgrade the volume showed "scheduled to be deleted soon per data retention policy"; that warning is gone on Free. Volume max size 500 MB (fits Free). PostgreSQL 18.6 |
+| 3 | Backup and restore proof | **VERIFIED** | Exported schema and every row through Railway's Data tab with read-only SELECTs (md5 checksums computed in production). Saved at `C:\Users\Dhanu\GlaxMiner-backups\prod-20261118-railway-export\`. `npm run backup:verify` restored it into a disposable local PostgreSQL: all row counts, checksums and balance totals match (`ok: true`). No Railway backups exist (they need a paid plan) |
+| 4 | User count and balance totals | **VERIFIED** | `users`: **1 row**, telegram_id `1`, username "Developer" (the old app's fallback account), balance 0, level 1, created 2026-08-04, a mining session started that day. `usdt_deposits`: 0. `wallet_transactions`: 0. Total GLX 0, total USDT 0. **No real player data was ever stored** |
+| 5 | Database password rotation | **PREPARED** | Not done. The data is a single test row, so risk is low, but it must be done before the API goes live. Steps: `PHASE0.md` section 6a |
+| 6 | Bot token rotation | **BLOCKED** | Needs your Telegram account (BotFather) |
 | 7 | Security branch | **VERIFIED** | `security/phase-0-v2`, parent `92c29f4`; `server/config/mining.js` byte-identical |
-| 8 | Tests | **VERIFIED** | 56 tests, repeated green runs; frontend build clean; bundle has no secrets or dev-only code |
-| 9 | Migrations | **VERIFIED: none needed** | Works on the original INTEGER schema and on a NUMERIC-widened one |
-| 10 | Railway deployment | **BLOCKED** | Prerequisites 1 to 6 not met; nothing deployed |
-| 11 | Vercel deployment | **BLOCKED** | Not signed in to Vercel; frontend must follow a healthy API anyway |
-| 12 | Telegram launch test | **BLOCKED** | Needs a deployed API and your bot |
+| 8 | Tests | **VERIFIED** | 56 tests, repeated green runs; frontend build clean |
+| 9 | Migrations | **VERIFIED: none needed** | Production `users.balance` is `numeric(20,8)` (the WIP server widened it); the branch is tested against exactly that. Extra WIP columns and the `usdt_deposits` / `wallet_transactions` tables are left untouched |
+| 10 | Railway API deployment | **PREPARED** | Not deployed (prerequisites 5 and 6 open). On Free the API needs `BOT_TOKEN`, `DATABASE_URL=${{Postgres.DATABASE_URL}}`, `ALLOWED_ORIGINS` |
+| 11 | Vercel deployment | **BLOCKED** | Not signed in to Vercel |
+| 12 | Telegram launch test | **BLOCKED** | Needs the deployed API and your bot |
 | 13 | Mining and upgrade tests | **VERIFIED locally only** | Not tested in production |
-| 14 | Git history cleanup | **PREPARED + rehearsed** | Bundle backup verified; rehearsal removes both `.env` files from every commit with no other file changes. Force-push needs your approval |
+| 14 | Git history cleanup | **PREPARED + rehearsed** | Force-push needs your approval after rotation |
 
-## What you need to do to unblock
+## Free-plan notes
+- Free deployments are serverless-style and limited to 0.5 GB RAM per service and $1 of usage a month; both Postgres and the API fit for current traffic. Watch the usage page.
+- Public database access was **not** enabled (a permission check blocked it, and it wasn't needed). The API reaches Postgres over Railway's private network.
+- Railway backups need a paid plan; use `npm run backup` (from inside Railway's network or with a temporary tunnel) or the Data-tab export method for future backups.
 
-1. **Choose a Railway plan** (the trial expired; this is a purchase only you can make). Do it soon: the volume still exists, but an inactive trial project is at risk of cleanup.
-2. Redeploy **only the Postgres** service first (do not deploy the API yet). Then take a Railway backup (needs a paid plan), and let me run `npm run backup` + `npm run backup:verify` with the current `DATABASE_PUBLIC_URL` set in the shell environment.
-3. Rotate the bot token in BotFather yourself, and put it in Railway (API + bot) yourself.
-4. Approve the deploy once 1 to 3 are done; approve the history force-push after rotation.
+## Next steps
+1. Rotate the bot token in BotFather; set it on the bot host and the Railway API service.
+2. Rotate the database password (or confirm you accept the risk given the database holds only the test row).
+3. Approve deploying the API from `security/phase-0-v2`, then the frontend on Vercel (sign in to Vercel in the browser pane).
+4. Approve the history force-push.

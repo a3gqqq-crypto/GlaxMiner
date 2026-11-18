@@ -181,7 +181,9 @@ async function restoreInto(c, dir) {
   }
 
   for (const t of schema.tables) {
-    for (const k of t.constraints.filter((x) => x.type !== "f")) {
+    // "n" = NOT NULL constraints listed separately by PostgreSQL 18+; the
+    // column definitions above already carry NOT NULL.
+    for (const k of t.constraints.filter((x) => x.type !== "f" && x.type !== "n")) {
       await c.query(`ALTER TABLE ${q(t.name)} ADD CONSTRAINT ${q(k.name)} ${k.def}`);
     }
   }
