@@ -6,14 +6,13 @@ import { glx } from "../lib/format";
 import { FacetMark } from "../art/Facet";
 import { Avatar } from "./kit";
 import PickaxeIcon from "../game/PickaxeIcon";
-import { IconOutpost, IconLab, IconContracts, IconRanks, IconVault } from "./icons";
+import { IconOutpost, IconPickaxe, IconVault, IconUser } from "./icons";
 
 export const TABS = [
-  { id: "outpost", label: "Outpost", Icon: IconOutpost },
-  { id: "lab", label: "Forge", Icon: IconLab },
-  { id: "contracts", label: "Contracts", Icon: IconContracts },
-  { id: "ranks", label: "Ranks", Icon: IconRanks },
-  { id: "vault", label: "Vault", Icon: IconVault },
+  { id: "mine", label: "Mine", Icon: IconOutpost },
+  { id: "upgrades", label: "Upgrades", Icon: IconPickaxe },
+  { id: "wallet", label: "Wallet", Icon: IconVault },
+  { id: "profile", label: "Profile", Icon: IconUser },
 ];
 
 export function TabBar({ active, onSelect, badges = {} }) {
@@ -48,7 +47,7 @@ export function TabBar({ active, onSelect, badges = {} }) {
 export function TopBar({ onProfile }) {
   const { profile, level, balance } = useGame();
   const tu = telegramUser();
-  const name = tu?.first_name || profile?.username || "Prospector";
+  const name = tu?.first_name || profile?.username || "Miner";
   const rig = tierInfo(level);
   return (
     <header className="topbar">

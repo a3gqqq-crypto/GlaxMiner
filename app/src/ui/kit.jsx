@@ -56,10 +56,6 @@ export function Chip({ tone = "neutral", children, pulse }) {
   );
 }
 
-export function PlannedBadge({ label = "In development" }) {
-  return <Chip tone="planned">{label}</Chip>;
-}
-
 export function SectionTitle({ children, aside }) {
   return (
     <div className="section-title">

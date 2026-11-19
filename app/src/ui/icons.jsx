@@ -21,9 +21,6 @@ const make = (paths) =>
   };
 
 export const IconOutpost = make(<><path d="M12 2.5l8 4.8v9.4l-8 4.8-8-4.8V7.3z" /><path d="M12 2.5v19" /><path d="M4 7.3l8 4.7 8-4.7" /></>);
-export const IconLab = make(<><path d="M9 3h6" /><path d="M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21.5h11.6a2 2 0 0 0 1.7-3L14 9V3" /><path d="M7.5 15h9" /></>);
-export const IconContracts = make(<><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4V2.5h6V4" /><path d="M9 13l2 2 4-4" /></>);
-export const IconRanks = make(<><path d="M6 20v-7" /><path d="M12 20V5" /><path d="M18 20v-10" /><path d="M3 20h18" /></>);
 export const IconVault = make(<><rect x="3" y="6" width="18" height="14" rx="2" /><path d="M3 10h18" /><path d="M15.5 15h2.5" /></>);
 export const IconBolt = make(<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12z" />);
 export const IconClock = make(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>);
@@ -31,6 +28,8 @@ export const IconArrowUp = make(<><path d="M12 19V5" /><path d="M6 11l6-6 6 6" /
 export const IconLock = make(<><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></>);
 export const IconCheck = make(<path d="M5 12l5 5 9-10" />);
 export const IconChevron = make(<path d="M9 6l6 6-6 6" />);
+export const IconPickaxe = make(<><path d="M4 7.5C7.5 4 13 3 17.5 4.5" /><path d="M16.5 3.5c1.6 4.4.6 9.9-3 13.5" /><path d="M14.5 9.5L4 20" /></>);
+export const IconUser = make(<><circle cx="12" cy="8" r="4" /><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" /></>);
 export const IconUsers = make(<><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0" /><path d="M16 4.5a3.5 3.5 0 0 1 0 7" /><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5" /></>);
 export const IconShare = make(<><path d="M12 15V3" /><path d="M7 8l5-5 5 5" /><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></>);
 export const IconShield = make(<><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z" /><path d="M8.5 12l2.5 2.5 4.5-5" /></>);

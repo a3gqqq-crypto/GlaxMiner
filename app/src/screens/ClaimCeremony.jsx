@@ -55,7 +55,7 @@ export default function ClaimCeremony({ result, onClose, onStartNext, startBusy 
             <h2 id="ceremony-title" className="ceremony__amount">
               +<Ticker value={result.reward} /> <span className="ceremony__unit">GLX</span>
             </h2>
-            <p className="ceremony__note">Credited to your Vault by the server.</p>
+            <p className="ceremony__note">Credited to your wallet by the server.</p>
             <div className="ceremony__balance">
               <span>New balance</span>
               <strong>{glx(result.balance)} GLX</strong>
@@ -65,7 +65,7 @@ export default function ClaimCeremony({ result, onClose, onStartNext, startBusy 
                 Start next session
               </Button>
               <Button variant="ghost" onClick={onClose}>
-                Back to Outpost
+                Back to Mine
               </Button>
             </div>
           </motion.div>

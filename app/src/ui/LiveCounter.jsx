@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "../lib/prefs";
+import { humanDuration } from "../lib/format";
 
 // Pending session earnings, drawn locally from server-authoritative data:
-//   earned = reward × clamp((serverNow − start) / duration, 0, 1)
+//   earned = reward × clamp((serverNow() - start) / duration, 0, 1)
 // reward, start and duration come from /mine/status; serverNow() is the
 // device clock corrected to the server clock. No per-second API calls, no
 // local state that could drift: reopening or reconnecting recomputes the same
@@ -17,10 +18,13 @@ function split(v) {
   return [Number(i).toLocaleString("en-US"), d];
 }
 
-export default function LiveCounter({ start, duration, reward, serverNow, ready }) {
+// state: "idle" | "mining" | "ready"; duration in seconds, start in ms.
+export default function LiveCounter({ state, start, duration, reward, serverNow }) {
   const intRef = useRef(null);
   const decRef = useRef(null);
   const rate = duration > 0 ? reward / duration : 0;
+  const ready = state === "ready";
+  const idle = state === "idle";
 
   useEffect(() => {
     if (!duration || !reward) return undefined;
@@ -30,7 +34,7 @@ export default function LiveCounter({ start, duration, reward, serverNow, ready 
     const reduced = prefersReducedMotion();
     const paint = () => {
       const elapsed = (serverNow() - start) / 1000;
-      const k = ready ? 1 : Math.min(1, Math.max(0, elapsed / duration));
+      const k = idle ? 0 : ready ? 1 : Math.min(1, Math.max(0, elapsed / duration));
       const [i, d] = split(reward * k);
       const text = i + d;
       if (text !== lastText && intRef.current && decRef.current) {
@@ -38,7 +42,7 @@ export default function LiveCounter({ start, duration, reward, serverNow, ready 
         decRef.current.textContent = d;
         lastText = text;
       }
-      return k >= 1;
+      return idle || k >= 1;
     };
     const loop = () => {
       if (paint()) return;
@@ -55,13 +59,13 @@ export default function LiveCounter({ start, duration, reward, serverNow, ready 
       clearTimeout(timer);
       document.removeEventListener("visibilitychange", onVis);
     };
-  }, [start, duration, reward, serverNow, ready]);
+  }, [start, duration, reward, serverNow, ready, idle]);
 
   return (
-    <div className={`live-counter ${ready ? "is-ready" : ""}`}>
+    <div className={`live-counter is-${state}`}>
       <div className="live-counter__label">
         <span className="live-counter__dot" aria-hidden="true" />
-        {ready ? "Session complete · ready to claim" : "Session earned · pending"}
+        {ready ? "Session earnings · ready to claim" : idle ? "Session earnings" : "Session earnings · pending"}
       </div>
       <div className="live-counter__value" aria-live="off">
         <span ref={intRef} className="live-counter__int">0</span>
@@ -70,13 +74,13 @@ export default function LiveCounter({ start, duration, reward, serverNow, ready 
         <span className="live-counter__unit">GLX</span>
       </div>
       <div className="live-counter__rate">
-        <span className="mono">{rate.toFixed(6)}</span> GLX / sec · {reward} GLX per session
+        <span className="mono">{rate.toFixed(6)}</span> GLX/sec · {reward} GLX per {humanDuration(duration)}
       </div>
     </div>
   );
 }
 
-// Compact pending amount (Vault), same formula and clock as the big counter.
+// Compact pending amount (Wallet), same formula and clock as the big counter.
 export function PendingValue({ start, duration, reward, serverNow, ready, className = "" }) {
   const ref = useRef(null);
   useEffect(() => {

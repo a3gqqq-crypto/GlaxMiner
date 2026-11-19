@@ -19,7 +19,6 @@ export default function MiningStage({ mode = "idle", tier = 1, charge = 0, label
       reduced: prefersReducedMotion(),
       onImpact: ({ big, tap }) => {
         if (tap) haptic.impact(big ? "heavy" : "light");
-        else if (big) haptic.impact("soft");
       },
     });
     scene.current = s;

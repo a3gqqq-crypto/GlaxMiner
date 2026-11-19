@@ -11,7 +11,7 @@ export function BootScreen() {
         <span className="gate__pulse" aria-hidden="true" />
       </motion.div>
       <div className="gate__brand">GLAXMINER</div>
-      <div className="gate__sub">Linking to your outpost…</div>
+      <div className="gate__sub">Signing in…</div>
     </div>
   );
 }
@@ -38,7 +38,7 @@ export function SignInError({ onRetry }) {
         <FacetMark size={72} />
       </div>
       <div className="gate__brand">Connection lost</div>
-      <p className="gate__text">We couldn't verify your Telegram sign-in or reach the outpost servers. Your balance and progress are safe on the server.</p>
+      <p className="gate__text">We couldn't verify your Telegram sign-in or reach the GlaxMiner servers. Your balance and progress are safe on the server.</p>
       <Button variant="primary" icon={<IconRefresh size={18} />} onClick={onRetry} className="gate__cta">
         Try again
       </Button>
